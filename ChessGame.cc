@@ -45,8 +45,8 @@ void ChessGame::startGame(std::string player1, std::string player2) {
     }
   }
   // player owns 16 pieces
-  p1.getRocks().push_back(std::pair<int,int>(7, 0));
-  p1.getRocks().push_back(std::pair<int,int>(7, 7));
+  p1.getRooks().push_back(std::pair<int,int>(7, 0));
+  p1.getRooks().push_back(std::pair<int,int>(7, 7));
   p1.getKnights().push_back(std::pair<int,int>(7, 1));
   p1.getKnights().push_back(std::pair<int,int>(7, 6));
   p1.getBishops().push_back(std::pair<int,int>(7, 2));
@@ -56,8 +56,8 @@ void ChessGame::startGame(std::string player1, std::string player2) {
   for (int i = 0; i < len; i++) {
     p1.getPawns().push_back(std::pair<int,int>(6, i));
   }
-  p2.getRocks().push_back(std::pair<int,int>(0, 1));
-  p2.getRocks().push_back(std::pair<int,int>(0, 7));
+  p2.getRooks().push_back(std::pair<int,int>(0, 1));
+  p2.getRooks().push_back(std::pair<int,int>(0, 7));
   p2.getKnights().push_back(std::pair<int,int>(0, 1));
   p2.getKnights().push_back(std::pair<int,int>(0, 6));
   p2.getBishops().push_back(std::pair<int,int>(0, 2));
@@ -80,7 +80,7 @@ void ChessGame::add(bool player, std::string type, int row, int col) {
   } else if (type == "N" || type == "n") {
     p.getKnights().push_back(k);
   } else if (type == "R" || type == "r") {
-    p.getRocks().push_back(k);
+    p.getRooks().push_back(k);
   } else if (type == "Q" || type == "q") {
     p.getQueen().push_back(k);
   } else if (type == "K" || type == "k") {
@@ -113,10 +113,10 @@ void ChessGame::remove(bool player, std::string type, int r, int c) {
       }
     }
   } else if (type == "R" || type == "r") {
-    int len = p.getRocks().size();
+    int len = p.getRooks().size();
     for (int i = 0; i < len; i++) {
-      if (p.getRocks()[i].first == r && p.getRocks()[i].second == c){
-        p.getRocks().erase(p.getRocks().begin() + i);
+      if (p.getRooks()[i].first == r && p.getRooks()[i].second == c){
+        p.getRooks().erase(p.getRooks().begin() + i);
       }
     }
   } else if (type == "Q" || type == "q") {
