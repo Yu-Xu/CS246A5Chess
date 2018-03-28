@@ -41,7 +41,7 @@ void Cell::setPiece(std::string s, bool colour) {
   } else if (s == "n" || s == "N") {
     p = new Knight{s, colour, r, c};
   } else if (s == "r" || s == "R") {
-    p = new Rock{s, colour, r, c};
+    p = new Rook{s, colour, r, c};
   } else if (s == "b" || s == "B") {
     p = new Bishop{s, colour, r, c};
   } else {
@@ -58,7 +58,7 @@ void Cell::attackPiece(std::string s, bool colour) {
   } else if (s == "n" || s == "N") {
     p = new Knight{s, colour, r, c};
   } else if (s == "r" || s == "R") {
-    p = new Rock{s, colour, r, c};
+    p = new Rook{s, colour, r, c};
   } else if (s == "b" || s == "B") {
     p = new Bishop{s, colour, r, c};
   } else {
