@@ -52,7 +52,7 @@ class ChessBoard {
   bool incheck(bool player, int row, int col);
   bool checkMate(bool player);
   std::pair<int, int> findKing(bool colour);
-  std::pair<int, int> findRock(bool colour, int row, int col, int h, int v);
+  std::pair<int, int> findRook(bool colour, int row, int col, int h, int v);
 
 
   friend std::ostream &operator<<(std::ostream &out, const ChessBoard &b);
