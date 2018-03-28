@@ -1,0 +1,68 @@
+#!/bin/bash
+numArgs=$#
+if [ $numArgs -ne 2 ]
+then
+>&2 echo "Exactly two arguments needed"
+exit 1
+fi
+suitfile=$1
+program=$2
+if [ ! -f $suitfile ] || [ ! -f $program ]
+then
+	>&2 echo "One or both files dont exist"
+	exit 1
+fi
+for filename in $(<$suitfile)
+do
+	if [ ! -f "$filename.out" ]
+	then
+		>&2 echo "$filename.out not found"
+		exit 1
+	fi
+	filenameArgs="$filename.args"
+	arguments=""
+	if [ -f $filenameArgs ]
+	then
+		#read arguments <$filenameArgs
+		while IFS='' read -r line || [[ -n "$line" ]]; do
+    		#echo "Text read from file: $line"
+    		arguments="$arguments $line"
+		done < $filenameArgs
+	else
+		arguments=""
+	fi
+	tempname=$(mktemp "/tmp/$filename.outXXX")
+	if [ -f "$filename.in" ]
+	then
+		./$program $arguments <"$filename.in" >"$tempname.garbage"
+	else
+		./$program $arguments > "$tempname.garbage"
+	fi
+	./extractGameState "$tempname.garbage" > "$tempname"
+	cp "$tempname.garbage" "./$filename.movelog"
+	rm "$tempname.garbage"
+	bool=0
+	cmp --silent $tempname "$filename.out" || bool=1
+	if [ $bool -eq 1 ]
+	then
+		echo "Test failed: $filename"
+		echo "Args:"
+		if [ -f $filenameArgs ]
+		then
+			cat $filenameArgs
+			echo
+		fi
+		echo "Input:"
+		if [ -f "filename.in" ]
+		then
+			cat "$filename.in"
+			echo
+		fi
+		echo "Expected:"
+		cat "$filename.out"
+		echo
+		echo "Actual:"
+		cat $tempname
+	fi
+	rm $tempname
+done

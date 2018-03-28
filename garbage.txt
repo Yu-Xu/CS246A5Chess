@@ -1,0 +1,27 @@
+8 rnbqkbnr1
+7 pppppppp
+6  _ _ _ _
+5 _ _ _ _ 
+4  _ _ _ _
+3 _ _ _ _ 
+2 PPPPPPPP
+1 RNBQKBNR
+  abcdefgh
+8 rnbqkbnr2
+7 pppppppp
+6  _ _ _ _
+5 _ _ _ _ 
+4 P_ _ _ _
+3 _ _ _ _ 
+2  PPPPPPP
+1 RNBQKBNR
+  abcdefgh
+8 rnbqkbnr3
+7 ppppppp 
+6  _ _ _ p
+5 _ _ _ _ 
+4 P_ _ _ _
+3 _ _ _ _ 
+2  PPPPPPP
+1 RNBQKBNR
+  abcdefgh

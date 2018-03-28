@@ -1,0 +1,36 @@
+#!/bin/bash
+numArgs=$#
+if [ $numArgs -ne 2 ]
+then
+>&2 echo "Exactly two arguments needed"
+exit 1
+fi
+suitfile=$1
+program=$2
+if [ ! -f $suitfile ] || [ ! -f $program ]
+then
+	>&2 echo "One or both files dont exist"
+	exit 1
+fi
+for filename in $(<$suitfile)
+do
+	filenameArgs="$filename.args"
+	arguments=""
+	if [ -f $filenameArgs ]
+	then
+		#read arguments <$filenameArgs
+		while IFS='' read -r line || [[ -n "$line" ]]; do
+    		#echo "Text read from file: $line"
+    		arguments="$arguments $line"
+		done < $filenameArgs
+	else
+		arguments=""
+	fi
+	if [ -f "$filename.in" ]
+	then
+		./$program $arguments 0< "$filename.in" > "$filename.movelog"
+	else
+		./$program $arguments > "$filename.movelog"
+	fi
+	./extractGameState "$filename.movelog" > "$filename.out"
+done
