@@ -1,5 +1,5 @@
-#ifndef Pawn_H
-#define Pawn_H
+#ifndef PAWN_H
+#define PAWN_H
 #include "piece.h"
 #include <iostream>
 #include <string>
