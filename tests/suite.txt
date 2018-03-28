@@ -1,1 +1,4 @@
 normalTest
+fastMateTest
+castleShortTest
+castleLongTest
