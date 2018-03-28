@@ -109,7 +109,7 @@ void ChessBoard::init() {
     for(int j = 0; j < size; ++j) {
       if ((i >= 0 && i <=1) || (i >= 6 && i <=7)) {
         // setup 32 pieces
-        if (j == 0 || j == 7) { // set  rocks
+        if (j == 0 || j == 7) { // set  Rooks
           if (i == 0) board[i][j].setPiece("r", 0);
           if (i == 1) board[i][j].setPiece("p", 0);
           if (i == 6) board[i][j].setPiece("P", 1);
@@ -402,7 +402,7 @@ bool ChessBoard::moveDown(int r, int c, int row) {
   return true;
 }
 
-// this method moves three type piece, queen, bishop, rock
+// this method moves three type piece, queen, bishop, Rook
 bool ChessBoard::movePiece(bool player, int r, int c, int row, int col) {
   if (board[r][c].getPiece()->legalMove(player, row, col)) { // the destination follows the rule
     // see if there is any piece along the path
@@ -530,7 +530,7 @@ bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
   return false;
 }
 
-std::pair<int, int> ChessBoard::findRock(bool colour, int row, int col, int h, int v) {
+std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, int v) {
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
       if (board[i][j].getPiece() != nullptr) {
@@ -572,7 +572,7 @@ bool ChessBoard::kingRight(int r, int c, int row, int col, std::pair<int, int> k
         return false;
       }
     }
-    // no cell is occupied by other pieces from the destination to the rock
+    // no cell is occupied by other pieces from the destination to the Rook
     if(i!= c && board[r][i].getPiece() != nullptr) {
       return false;
     }
@@ -766,10 +766,10 @@ bool ChessBoard::moveKing(bool player, int r, int c, int row, int col) {
     if (((vdist == 0)&&(hdist == 2 || hdist == -2)) ||
       ((hdist == 0)&&(vdist == 2 || vdist == -2)) ||
       ((hdist == -2 || hdist == 2)&&(vdist == 2 || vdist == -2))) { // castling
-        std::pair<int, int> k = findRock(player, row, col, hdist, vdist);
-         if (k.first >= 0) { // king moves towards a rock
+        std::pair<int, int> k = findRook(player, row, col, hdist, vdist);
+         if (k.first >= 0) { // king moves towards a Rook
           if (board[r][c].getPiece()->getFirst() == true
-          && board[k.first][k.second].getPiece()->getFirst() == true) { // king and rock didnt move before
+          && board[k.first][k.second].getPiece()->getFirst() == true) { // king and Rook didnt move before
             // eight directions castling
             if (vdist == 0 && hdist == 2) { // moves right
               return kingRight(r, c,row, col, k, player);

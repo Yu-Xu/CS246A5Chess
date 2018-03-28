@@ -1,5 +1,5 @@
-#ifndef Piece_H
-#define Piece_H
+#ifndef PIECE_H
+#define PIECE_H
 #include <string>
 #include "Subject.h"
 #include "observer.h"

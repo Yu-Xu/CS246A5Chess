@@ -1,12 +1,12 @@
-#include "Rock.h"
+#include "rook.h"
 
-Rock::Rock(std::string s, bool colour, int row, int col): Piece{s, colour, row, col}, first{1} {}
+Rook::Rook(std::string s, bool colour, int row, int col): Piece{s, colour, row, col}, first{1} {}
 
 //, check{false} {}
 
-Rock::~Rock() {}
+Rook::~Rook() {}
 
-bool Rock::legalMove(bool player, int row, int col) {
+bool Rook::legalMove(bool player, int row, int col) {
   if (player == colour) {
     // std::cout << "Pawn r " << r << " c " << c << std::endl;
     // std::cout << "Pawn row " << row << " col " << col << std::endl;
@@ -20,10 +20,10 @@ bool Rock::legalMove(bool player, int row, int col) {
   }
 }
 
-bool Rock::getFirst() {
+bool Rook::getFirst() {
   return this->first;
 }
 
-void Rock::setFirst(bool first) {
+void Rook::setFirst(bool first) {
   this->first = first;
 }

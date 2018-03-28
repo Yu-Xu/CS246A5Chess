@@ -1,5 +1,5 @@
-#ifndef Knight_H
-#define Knight_H
+#ifndef KNIGHT_H
+#define KNIGHT_H
 #include "piece.h"
 #include <string>
 
