@@ -1,5 +1,5 @@
-#ifndef Bishop_H
-#define Bishop_H
+#ifndef BISHOP_H
+#define BISHOP_H
 #include "piece.h"
 #include <string>
 

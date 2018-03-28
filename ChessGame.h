@@ -1,5 +1,5 @@
-#ifndef CHESSG_H
-#define ChessGame_H
+#ifndef CHESSGAME_H
+#define CHESSGAME_H
 #include <iostream>
 #include <string>
 #include <utility>
