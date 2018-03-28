@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player(bool colour): player{""}, colour{colour}, queen{}, king{}
- , knights{}, bishops{}, rocks{}, pawns{} {}
+ , knights{}, bishops{}, rooks{}, pawns{} {}
 
 Player::~Player() {}
 
@@ -13,8 +13,8 @@ void Player::setLevel(int l) {
   return;
 }
 
-std::vector<std::pair<int, int>> &Player::getRocks() {
-  return rocks;
+std::vector<std::pair<int, int>> &Player::getRooks() {
+  return rooks;
 }
 std::vector<std::pair<int, int>> &Player::getBishops() {
   return bishops;

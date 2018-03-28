@@ -6,7 +6,7 @@
 #include "pawn.h"
 #include "knight.h"
 #include "bishop.h"
-#include "rock.h"
+#include "rook.h"
 #include <string>
 
 Cell::Cell(): r{0}, c{0}, colour{0}, p{nullptr} {}
