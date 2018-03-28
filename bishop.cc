@@ -1,4 +1,4 @@
-#include "Bishop.h"
+#include "bishop.h"
 
 Bishop::Bishop(std::string s, bool colour, int row, int col): Piece{s, colour, row, col} {}
 

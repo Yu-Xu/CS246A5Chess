@@ -1,4 +1,4 @@
-#include "Pawn.h"
+#include "pawn.h"
 
 Pawn::Pawn(std::string s, bool colour, int row, int col): Piece{s, colour, row, col},
 first{1}, passant{0} {}

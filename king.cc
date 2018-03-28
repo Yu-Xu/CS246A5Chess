@@ -1,4 +1,4 @@
-#include "King.h"
+#include "king.h"
 #include <iostream>
 
 King::King(std::string s, bool colour, int row, int col): Piece{s, colour, row, col}, first{1} {}

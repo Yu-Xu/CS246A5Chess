@@ -1,4 +1,4 @@
-#include "Knight.h"
+#include "knight.h"
 
 Knight::Knight(std::string s, bool colour, int row, int col): Piece{s, colour, row, col} {}
 
