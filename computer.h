@@ -9,9 +9,9 @@ class Computer: public Player {
   Computer(bool colour);
   ~Computer();
 
-  void setLevel(int l) override:
-  std::vector<std::pair<int, int>> legalRange(int r, int c, std::string type, bool player) override;
-  std::vector<std::pair<int, int>> computerMove(bool player, int r, int c, std::string type) override;
+  void setLevel(int l) override;
+  // std::vector<std::pair<int, int>> legalRange(int r, int c, std::string type, bool player) override;
+  // std::vector<std::pair<int, int>> computerMove(bool player, int r, int c, std::string type) override;
 
 };
 #endif
