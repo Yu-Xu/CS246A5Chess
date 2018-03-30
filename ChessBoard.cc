@@ -253,10 +253,13 @@ bool ChessBoard::legalMove(int r, int c, int row, int col, std::string type, boo
 }
 
 
+//check before your own move and not the opponent
+//if in check, use new in-check logic and check the move that way
+
 // to see if a piece at (row, col) can capture its opponent's King
 bool ChessBoard::check(bool player, int row, int col, std::string type) {
-  bool opponent = !player;
-  std::pair<int, int> k = findKing(opponent);
+  //bool opponent = !player;
+  std::pair<int, int> k = findKing(player);
   bool check = false;
   if (k.first >= 0 && k.second >= 0) {
     //int r, int c, int row, int col, std::string type

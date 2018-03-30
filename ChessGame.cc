@@ -201,23 +201,36 @@ bool ChessGame::checkMate(bool player) {
   return theBoard.checkMate(player);
 }
 
+//check again if in check
+
 bool ChessGame::move(bool player, int r, int c, int row, int col) {
   std::string t1 = theBoard.getBoard()[r][c].getPiece()->type;
   std::string t2 = "";
   if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
     std::string t2 = theBoard.getBoard()[row][col].getPiece()->type;
   }
+
+  bool check = theBoard.check(player, row, col, t1);
+
+  if (check ==  true) {
+    if (player == 1) {
+      std::cout << "Black is in check" << std::endl;
+    } else {
+      std::cout << "White is in check" << std::endl;
+    }
+  }
+
   bool result = theBoard.move(player, r, c, row, col);
+
   if (result == true) {
-    bool check = theBoard.check(player, row, col, t1);
-    bool opponent = !player;
-    if (check ==  true) {
-      if (player == 1) {
-        std::cout << "Black is in check" << std::endl;
-      } else {
-        std::cout << "White is in check" << std::endl;
+    if (check) {
+      check = theBoard.check(player, row, col, t1);
+      if (check) {
+        return false;
       }
     }
+    bool opponent = !player;
+
     this->updatePlayer(player, r, c, row, col, t1, t2);
     // when opponet moves
     // change all your pawns passant to false;

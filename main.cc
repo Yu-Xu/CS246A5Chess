@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
           int row = d.first;
           int col = d.second;
           if (!game.move(turn, r, c, row, col)) {
-            cout << "Ilegal Move" << endl;
+            cout << "Illegal Move" << endl;
             cout << "Please Try Again" << endl;
             continue;
           }
