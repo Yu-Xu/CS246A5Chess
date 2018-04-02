@@ -10,7 +10,7 @@ class Rook: public Piece {
   Rook(std::string s, bool colour, int row, int col);
   ~Rook();
 
-  bool legalMove(bool player, int row, int col) override;
+  bool legalMove(int row, int col) override;
   bool getFirst() override;
   void setFirst(bool first) override;
 };

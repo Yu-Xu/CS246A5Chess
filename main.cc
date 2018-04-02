@@ -7,9 +7,13 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   cin.exceptions(ios::eofbit|ios::failbit);
+  //whose turn it is
   bool turn = 1;
+  //is player1 human
   bool h1 = true;
+  //is player2 human
   bool h2 = true;
+
   bool goodSetup = true;
   bool inSetup = false;
   bool ifSetup = false;
@@ -67,7 +71,7 @@ int main(int argc, char *argv[]) {
         // if(turn == 0 && !h2) {
         //   game.computerMove(turn);
         // }
-        if((turn == 1 && h1) || (turn == 0 && h2)) {
+        if ((turn == 1 && h1) || (turn == 0 && h2)) {//check if human player
           string from;
           string dest;
           cin >> from >> dest;
@@ -77,12 +81,19 @@ int main(int argc, char *argv[]) {
           int c = f.second;
           int row = d.first;
           int col = d.second;
-          if (!game.move(turn, r, c, row, col)) {
+
+          bool tryMove = game.move(turn, r, c, row, col);
+          if (!tryMove) {
             cout << "Illegal Move" << endl;
             cout << "Please Try Again" << endl;
             continue;
+          } else {
+
           }
         }
+
+
+        
         // staleMate = game.staleMate();
         checkMate = game.checkMate(turn);
         // if (staleMate ==  true) {

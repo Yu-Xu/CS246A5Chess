@@ -201,16 +201,76 @@ bool ChessGame::checkMate(bool player) {
   return theBoard.checkMate(player);
 }
 
-//check again if in check
 
+//check for if selected coordinates are valid
+// selected correct piece to move?
+// selected valid destination? - your piece @ dest.?
 bool ChessGame::move(bool player, int r, int c, int row, int col) {
-  std::string t1 = theBoard.getBoard()[r][c].getPiece()->type;
-  std::string t2 = "";
+  //what piece is on the coordinates
+  std::string target = theBoard.getBoard()[r][c].getPiece()->type;
+  std::string dest = "";
   if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
     std::string t2 = theBoard.getBoard()[row][col].getPiece()->type;
   }
 
-  bool check = theBoard.check(player, row, col, t1);
+  //boolean result of move command
+  bool result = false;
+
+  //check if selected square has player owned piece (p1, White)
+  if (player && (target == "Q" || target == "K" || target == "R" ||
+    target == "N" || target == "B" || target == "P")) {
+      //check if destination has player owned piece
+      if (dest == "Q" || dest == "K" || dest == "R" ||
+        dest == "N" || dest == "B" || dest == "P") {
+          return result;
+      }
+      //correctly selected piece and destination not taken by own piece
+      result = theBoard.move(player, r, c, row, col, target);
+
+  } else if (!player && (target == "q" || target == "k" || target == "r" ||
+    target == "n" || target == "b" || target == "p")) { //(p2, black)
+      //check if destination has player owned piece
+      if (dest == "q" || dest == "k" || dest == "r" ||
+        dest == "n" || dest == "b" || dest == "p") {
+          return result;
+      }
+      //correctly selected piece and destination not taken by own piece
+      result = theBoard.move(player, r, c, row, col, target);
+
+  } else { //no piece or not owned by player, didn't select own piece
+    return result;
+  }
+
+  //check if move is legal and successfully completed, update player
+  // board::move updates the board if the move was successful
+  // just need to update player.
+  if (result) {
+
+    bool opponent = !player;
+
+    this->updatePlayer(player, r, c, row, col, t1, t2);
+
+    // when opponent moves
+    // change all your pawns passant to false;
+    if (p1.getColour() == opponent) {
+      int len = p1.getPawns().size();
+      for (int i = 0; i < len; i++) {
+        std::pair<int, int> pawn = p1.getPawns()[i];
+        theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
+      }
+    } else {
+      int len = p2.getPawns().size();
+      for (int i = 0; i < len; i++) {
+        std::pair<int, int> pawn = p2.getPawns()[i];
+        theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
+      }
+    }
+  }
+  return result;
+}
+
+
+/*  bool check = theBoard.check(player, row, col, t1);
 
   if (check ==  true) {
     if (player == 1) {
@@ -220,7 +280,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
     }
   }
 
-  bool result = theBoard.move(player, r, c, row, col);
+  bool result = theBoard.move(player, r, c, row, col); */
 
   if (result == true) {
     if (check) {

@@ -6,15 +6,11 @@ Rook::Rook(std::string s, bool colour, int row, int col): Piece{s, colour, row, 
 
 Rook::~Rook() {}
 
-bool Rook::legalMove(bool player, int row, int col) {
-  if (player == colour) {
+bool Rook::legalMove(int row, int col) {
     // std::cout << "Pawn r " << r << " c " << c << std::endl;
     // std::cout << "Pawn row " << row << " col " << col << std::endl;
-    if ((r == row && c != col) || (r != row && c == col)) {
-      return true;
-    } else {
-      return false;
-    }
+  if ((r == row && c != col) || (r != row && c == col)) {
+    return true;
   } else {
     return false;
   }

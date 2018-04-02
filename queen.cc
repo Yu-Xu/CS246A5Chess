@@ -6,20 +6,16 @@ Queen::Queen(std::string s, bool colour, int row, int col): Piece{s, colour, row
 
 Queen::~Queen() {}
 
-bool Queen::legalMove(bool player, int row, int col) {
-  if (player == colour) {
-    // std::cout << "Pawn r " << r << " c " << c << std::endl;
-    // std::cout << "Pawn row " << row << " col " << col << std::endl;
-    if ((r == row && c != col) || (r != row && c == col)) {
+bool Queen::legalMove(int row, int col) {
+  // std::cout << "Pawn r " << r << " c " << c << std::endl;
+  // std::cout << "Pawn row " << row << " col " << col << std::endl;
+  if ((r == row && c != col) || (r != row && c == col)) {
+    return true;
+  } else {
+    if ((row - r == c - col) || (row - r == col - c)) {
       return true;
     } else {
-      if ((row - r == c - col) || (row - r == col - c)) {
-        return true;
-      } else {
-        return false;
-      }
+      return false;
     }
-  } else {
-    return false;
   }
 }

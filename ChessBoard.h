@@ -26,16 +26,16 @@ class ChessBoard {
   void updateOb(int r, int c, int row, int col);
   bool checkBoard();
 
-  bool move(bool player, int r, int c, int row, int col);
+  bool move(bool player, int r, int c, int row, int col, string type);
 
   bool moveRight(int r, int c, int col);
   bool moveLeft(int r, int c, int col);
   bool moveUp(int r, int c, int col);
   bool moveDown(int r, int c, int col);
-  bool movePiece(bool player, int r, int c, int row, int col);
+  bool movePiece(int r, int c, int row, int col, string type);
 
-  bool moveKnight(bool player, int r, int c, int row, int col);
-  bool movePawn(bool player, int r, int c, int row, int col);
+  bool moveKnight(int r, int c, int row, int col);
+  bool movePawn(int r, int c, int row, int col);
 
   bool kingRight(int r, int c, int row, int col, std::pair<int, int> k, bool player);
   bool kingLeft(int r, int c, int row, int col, std::pair<int, int> k, bool player);

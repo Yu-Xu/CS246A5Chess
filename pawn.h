@@ -12,7 +12,7 @@ class Pawn: public Piece {
   Pawn(std::string s, bool colour, int row, int col);
   ~Pawn();
 
-  bool legalMove(bool player, int row, int col) override;
+  bool legalMove(int row, int col) override;
   bool getPassant() override;
   bool getFirst() override;
   void setPassant(bool passant) override;
