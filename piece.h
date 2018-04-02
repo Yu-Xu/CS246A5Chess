@@ -4,7 +4,7 @@
 #include "Subject.h"
 #include "observer.h"
 
-struct Piece: public Subject, public Observer  {
+struct Piece: public Subject, public Observer {
   std::string type;  // See above
   bool colour;   // What colour was the new piece?  (NOT what is my colour)
   int r, c;

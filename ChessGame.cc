@@ -207,48 +207,87 @@ bool ChessGame::checkMate(bool player) {
 // selected valid destination? - your piece @ dest.?
 bool ChessGame::move(bool player, int r, int c, int row, int col) {
   //what piece is on the coordinates
-  std::string target = theBoard.getBoard()[r][c].getPiece()->type;
+  std::string target = "";
+  bool targetC;
+
   std::string dest = "";
+  bool destC;
+
+  //check if player selected a cell with a piece or not
+  if (theBoard.getBoard()[r][c].getPiece() != nullptr) {
+    //get target's piece information here
+    targetC = board[r][c].getPiece()->colour;
+    target = theBoard.getBoard()[r][c].getPiece()->type;
+
+    //check if selected piece is of the player's colour
+    if ((player && !targetC) || (!player && targetC)) {
+      return false;
+    }
+  } else { //if no piece selected, illegal move, can't move nothing
+    return false;
+  }
+
+  //check for destination if it has a piece on it
   if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
-    std::string t2 = theBoard.getBoard()[row][col].getPiece()->type;
+    //get destination's piece information here
+    // then use it to replace removed piece
+    destC = board[row][col].getPiece()->colour;
+    dest = theBoard.getBoard()[row][col].getPiece()->type;
+
+    //check if destination piece is of the player's colour
+    if ((player && destC) || (!player && !destC)) {
+      return false;
+    }
   }
 
   //boolean result of move command
-  bool result = false;
-
-  //check if selected square has player owned piece (p1, White)
-  if (player && (target == "Q" || target == "K" || target == "R" ||
-    target == "N" || target == "B" || target == "P")) {
-      //check if destination has player owned piece
-      if (dest == "Q" || dest == "K" || dest == "R" ||
-        dest == "N" || dest == "B" || dest == "P") {
-          return result;
-      }
-      //correctly selected piece and destination not taken by own piece
-      result = theBoard.move(player, r, c, row, col, target);
-
-  } else if (!player && (target == "q" || target == "k" || target == "r" ||
-    target == "n" || target == "b" || target == "p")) { //(p2, black)
-      //check if destination has player owned piece
-      if (dest == "q" || dest == "k" || dest == "r" ||
-        dest == "n" || dest == "b" || dest == "p") {
-          return result;
-      }
-      //correctly selected piece and destination not taken by own piece
-      result = theBoard.move(player, r, c, row, col, target);
-
-  } else { //no piece or not owned by player, didn't select own piece
-    return result;
-  }
+  bool result = theBoard.move(player, r, c, row, col, target);
 
   //check if move is legal and successfully completed, update player
   // board::move updates the board if the move was successful
-  // just need to update player.
+  //if successfully moved piece,
+  // check new board if player is still in check
+  // if in check, redo move and return false,
+  // else continue
   if (result) {
+    //find own king
+    std::pair<int, int> myKing;
+    if (player) {
+      myKing = p1.getKing()[0];
+    } else {
+      myKing = p2.getKing()[0];
+    }
+    //check king if in check
+    bool selfCheck = theBoard.incheck(player, myKing.first, myKing.second);
+
+    if (selfCheck) {
+      result = theBoard.move(player, row, col, r, c, target);
+      if (dest != "") {
+        theBoard.addPiece(row, col, dest, colourTaken);
+      }
+      return false;
+    }
+
+    //everything works out, no one in check and legal move
+    // need to update players
+    // check if move put opponent in check
+    this->updatePlayer(player, r, c, row, col, t1, t2);
 
     bool opponent = !player;
 
-    this->updatePlayer(player, r, c, row, col, t1, t2);
+    //did move put opponent in check
+    bool check = theBoard.check(opponent, row, col, t1);
+
+    //if put in check
+    if (check) {
+      //if white put black in check
+      if (player == 1) {
+        std::cout << "Black is in check" << std::endl;
+      } else {
+        //if black put white in check
+        std::cout << "White is in check" << std::endl;
+      }
+    }
 
     // when opponent moves
     // change all your pawns passant to false;
@@ -265,50 +304,10 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
         theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
       }
     }
+
+  } else {
+    return result;
   }
-  return result;
-}
-
-
-/*  bool check = theBoard.check(player, row, col, t1);
-
-  if (check ==  true) {
-    if (player == 1) {
-      std::cout << "Black is in check" << std::endl;
-    } else {
-      std::cout << "White is in check" << std::endl;
-    }
-  }
-
-  bool result = theBoard.move(player, r, c, row, col); */
-
-  if (result == true) {
-    if (check) {
-      check = theBoard.check(player, row, col, t1);
-      if (check) {
-        return false;
-      }
-    }
-    bool opponent = !player;
-
-    this->updatePlayer(player, r, c, row, col, t1, t2);
-    // when opponet moves
-    // change all your pawns passant to false;
-    if (p1.getColour() == opponent) {
-      int len = p1.getPawns().size();
-      for (int i = 0; i < len; i++) {
-        std::pair<int, int> pawn = p1.getPawns()[i];
-        theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
-      }
-    } else {
-      int len = p2.getPawns().size();
-      for (int i = 0; i < len; i++) {
-        std::pair<int, int> pawn = p2.getPawns()[i];
-        theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
-      }
-    }
-  }
-  return result;
 }
 
 std::ostream &operator<<(std::ostream &out, const ChessGame &g) {

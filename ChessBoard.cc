@@ -252,10 +252,6 @@ bool ChessBoard::legalMove(int r, int c, int row, int col, std::string type, boo
   return false;
 }
 
-
-//check before your own move and not the opponent
-//if in check, use new in-check logic and check the move that way
-
 // to see if a piece at (row, col) can capture its opponent's King
 bool ChessBoard::check(bool player, int row, int col, std::string type) {
   //bool opponent = !player;
@@ -313,39 +309,25 @@ bool ChessBoard::checkMate(bool player) {
 //check if selected piece has a legal move based on piece move rules
 //
 bool ChessBoard::move(bool player, int r, int c, int row, int col, string type) {
-/*  if (board[r][c].getPiece() == nullptr) {
-    return false;
-  } */
-
-  //std::string type = board[r][c].getPiece()->type;
-
   bool colour = board[r][c].getPiece()->colour;
 
+  //check for what type of piece is being moved
   if (type == "Q" || type == "q" || type == "R" ||
     type == "r" || type == "B" || type == "b") {
-      if (movePiece(r, c, row, col, type)) { // if Q R B can move to (row, col)
-        if (board[row][col].getPiece() != nullptr /* &&
-         board[row][col].getPiece()->type != "k" &&
-         board[row][col].getPiece()->type != "K" */ ) { //if opponent, capture
 
-        /*  if (colour == board[row][col].getPiece()->colour) { // cannot capture piece with same colour
-            return false;
-          } */
+      if (movePiece(r, c, row, col, type)) { // if Q R B can move to (row, col)
+        if (board[row][col].getPiece() != nullptr) { //if opponent, capture
 
           //capture piece
           board[row][col].attackPiece(type, colour);
           updateOb(r, c, row, col); // updateObservers
           board[r][c].clearPiece();
-
-
-
           if (type == "R" || type == "r") {
             board[row][col].getPiece()->setFirst(0);
           }
-
-
           return true;
-        } else /* if (board[row][col].getPiece() == nullptr) */ { // move without capture
+
+        } else { // move without capture
           board[row][col].setPiece(type, colour);
           updateOb(r, c, row, col);
           board[r][c].clearPiece();
@@ -354,37 +336,36 @@ bool ChessBoard::move(bool player, int r, int c, int row, int col, string type) 
           }
           return true;
         }
-      } else {
-        return false;
       }
+      return false;
+
   } else if (type == "N" || type == "n") { //if target is a knight
 
     if (moveKnight(r, c, row, col)) {
-      if (board[row][col].getPiece() != nullptr
-        /*  && board[row][col].getPiece()->type != "k"
-          && board[row][col].getPiece()->type != "K" */ ) {
-
-        /* if (colour == board[row][col].getPiece()->colour) {
-          return false;
-        } */
+      if (board[row][col].getPiece() != nullptr) {
 
         board[row][col].attackPiece(type, colour);
         updateOb(r, c, row, col);
         board[r][c].clearPiece();
+
         return true;
-      } else /* if (board[row][col].getPiece() == nullptr) */ {
+      } else {
+
         board[row][col].setPiece(type, colour);
         updateOb(r, c, row, col);
         board[r][c].clearPiece();
+
         return true;
       }
-    } else {
-      return false;
     }
+    return false;
+
   } else if (type == "P" || type == "p") {
-    return movePawn(r, c, row, col); // if pawn moves return true otherwise return false
+    //if pawn moves return true otherwise return false
+    return movePawn(r, c, row, col);
   } else {
-    return moveKing(r, c, row, col);  // if king moves return true otherwise return false
+    //if king moves return true otherwise return false
+    return moveKing(r, c, row, col);
   }
 }
 
