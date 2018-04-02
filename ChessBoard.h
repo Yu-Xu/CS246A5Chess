@@ -26,13 +26,13 @@ class ChessBoard {
   void updateOb(int r, int c, int row, int col);
   bool checkBoard();
 
-  bool move(bool player, int r, int c, int row, int col, string type);
+  bool move(bool player, int r, int c, int row, int col, std::string type);
 
   bool moveRight(int r, int c, int col);
   bool moveLeft(int r, int c, int col);
   bool moveUp(int r, int c, int col);
   bool moveDown(int r, int c, int col);
-  bool movePiece(int r, int c, int row, int col, string type);
+  bool movePiece(int r, int c, int row, int col, std::string type);
 
   bool moveKnight(int r, int c, int row, int col);
   bool movePawn(int r, int c, int row, int col);
