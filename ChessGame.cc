@@ -272,7 +272,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
       /* if (dest != "") {
         theBoard.addPiece(row, col, dest, destC);
       } */
-      result = false;
+      //result = false;
     } else {
 
       //everything works out, no one in check and legal move
