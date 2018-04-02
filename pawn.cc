@@ -12,7 +12,7 @@ bool Pawn::legalMove(int row, int col) {
     // std::cout << "Pawn r " << r << " c " << c << std::endl;
     // std::cout << "Pawn row " << row << " col " << col << std::endl;
   int vdist;
-  if (player == 1) {
+  if (r > row) {
     vdist = r - row;
   } else {
     vdist = row - r;

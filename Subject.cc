@@ -20,7 +20,7 @@ void Subject::deattach(Observer *o) {
 
 void Subject::notifyObservers(bool player, int r, int c,
 std::string type, std::vector<std::pair<int, int>> &v) {
-  for(int i = 0; i < observers.size(); i++) {
+  for(unsigned int i = 0; i < observers.size(); i++) {
     if(observers[i] == nullptr) {
       std::cout << "null" << std::endl;
       observers.erase(observers.begin() + i);

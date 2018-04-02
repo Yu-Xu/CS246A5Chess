@@ -261,47 +261,55 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
     bool selfCheck = theBoard.incheck(player, myKing.first, myKing.second);
 
     if (selfCheck) {
-      result = theBoard.move(player, row, col, r, c, target);
-      if (dest != "") {
+      //cant just reverse move cause pawns cant go backwards
+      //reverse the move here somehow
+      //need to move the piece object to a temp if it exists
+      //then move piece back and return piece, problem is with updateOb.
+      //I think need big 5 so we can copy/move any object for this undo part
+
+
+      //result = theBoard.move(player, row, col, r, c, target);
+      /* if (dest != "") {
         theBoard.addPiece(row, col, dest, destC);
-      }
+      } */
       result = false;
-    }
-
-    //everything works out, no one in check and legal move
-    // need to update players
-    // check if move put opponent in check
-    this->updatePlayer(player, r, c, row, col, target, dest);
-
-    bool opponent = !player;
-
-    //did move put opponent in check
-    bool check = theBoard.check(opponent, row, col, target);
-
-    //if put in check
-    if (check) {
-      //if white put black in check
-      if (player == 1) {
-        std::cout << "Black is in check" << std::endl;
-      } else {
-        //if black put white in check
-        std::cout << "White is in check" << std::endl;
-      }
-    }
-
-    // when opponent moves
-    // change all your pawns passant to false;
-    if (p1.getColour() == opponent) {
-      int len = p1.getPawns().size();
-      for (int i = 0; i < len; i++) {
-        std::pair<int, int> pawn = p1.getPawns()[i];
-        theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
-      }
     } else {
-      int len = p2.getPawns().size();
-      for (int i = 0; i < len; i++) {
-        std::pair<int, int> pawn = p2.getPawns()[i];
-        theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
+
+      //everything works out, no one in check and legal move
+      // need to update players
+      // check if move put opponent in check
+      this->updatePlayer(player, r, c, row, col, target, dest);
+
+      bool opponent = !player;
+
+      //did move put opponent in check
+      bool check = theBoard.check(opponent, row, col, target);
+
+      //if put in check
+      if (check) {
+        //if white put black in check
+        if (player == 1) {
+          std::cout << "Black is in check" << std::endl;
+        } else {
+          //if black put white in check
+          std::cout << "White is in check" << std::endl;
+        }
+      }
+
+      // when opponent moves
+      // change all your pawns passant to false;
+      if (p1.getColour() == opponent) {
+        int len = p1.getPawns().size();
+        for (int i = 0; i < len; i++) {
+          std::pair<int, int> pawn = p1.getPawns()[i];
+          theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
+        }
+      } else {
+        int len = p2.getPawns().size();
+        for (int i = 0; i < len; i++) {
+          std::pair<int, int> pawn = p2.getPawns()[i];
+          theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
+        }
       }
     }
   }

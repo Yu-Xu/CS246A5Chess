@@ -363,7 +363,7 @@ bool ChessBoard::move(bool player, int r, int c, int row, int col, std::string t
 
   } else if (type == "P" || type == "p") {
     //if pawn moves return true otherwise return false
-    return movePawn(player, r, c, row, col);
+    return movePawn(r, c, row, col);
   } else {
     //if king moves return true otherwise return false
     return moveKing(player, r, c, row, col);
@@ -462,10 +462,10 @@ bool ChessBoard::moveKnight(int r, int c, int row, int col) {
   return board[r][c].getPiece()->legalMove(row, col); // check if the destination is legal
 }
 
-bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
+bool ChessBoard::movePawn(int r, int c, int row, int col) {
   int hdist = col - c;
   int vdist;
-  if (player == 1) {
+  if (r > row) {
     vdist = r - row;
   } else {
     vdist = row - r;
@@ -532,6 +532,22 @@ bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
     }
   }
   return false;
+}
+
+void ChessBoard::undo(int r, int c, int row, int col,
+   std::string mover, bool moverC, const bool destC = false, const std::string dest = "") {
+     if (dest == "") {
+       board[r][c].setPiece(mover, moverC);
+       updateOb(r, c, row, col);
+       board[row][col].clearPiece();
+     } else {
+       board[r][c].setPiece(mover, moverC);
+       updateOb(r, c, row, col);
+       board[row][col].clearPiece();
+
+       board[row][col].setPiece(dest, destC);
+       updateOb(r, c, row, col);
+     }
 }
 
 std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, int v) {

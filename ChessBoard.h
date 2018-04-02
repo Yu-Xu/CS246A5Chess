@@ -37,6 +37,10 @@ class ChessBoard {
   bool moveKnight(int r, int c, int row, int col);
   bool movePawn(bool player, int r, int c, int row, int col);
 
+/* //tried to do undo method for it
+  void undo(int r, int c, int row, int col, std::string mover, bool moverC,
+     const bool destC = false, const std::string dest = ""); */
+
   bool kingRight(int r, int c, int row, int col, std::pair<int, int> k, bool player);
   bool kingLeft(int r, int c, int row, int col, std::pair<int, int> k, bool player);
   bool kingDown(int r, int c, int row, int col, std::pair<int, int> k, bool player);
