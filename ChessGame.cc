@@ -1,7 +1,7 @@
 #include "ChessGame.h"
+#include <string>
 
-ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {
-}
+ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {}
 
 ChessGame::~ChessGame() {}
 
@@ -216,7 +216,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
   //check if player selected a cell with a piece or not
   if (theBoard.getBoard()[r][c].getPiece() != nullptr) {
     //get target's piece information here
-    targetC = board[r][c].getPiece()->colour;
+    targetC = theBoard[r][c].getPiece()->colour;
     target = theBoard.getBoard()[r][c].getPiece()->type;
 
     //check if selected piece is of the player's colour
@@ -231,7 +231,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
   if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
     //get destination's piece information here
     // then use it to replace removed piece
-    destC = board[row][col].getPiece()->colour;
+    destC = theBoard[row][col].getPiece()->colour;
     dest = theBoard.getBoard()[row][col].getPiece()->type;
 
     //check if destination piece is of the player's colour
@@ -263,20 +263,20 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
     if (selfCheck) {
       result = theBoard.move(player, row, col, r, c, target);
       if (dest != "") {
-        theBoard.addPiece(row, col, dest, colourTaken);
+        theBoard.addPiece(row, col, dest, destC);
       }
-      return false;
+      result = false;
     }
 
     //everything works out, no one in check and legal move
     // need to update players
     // check if move put opponent in check
-    this->updatePlayer(player, r, c, row, col, t1, t2);
+    this->updatePlayer(player, r, c, row, col, target, dest);
 
     bool opponent = !player;
 
     //did move put opponent in check
-    bool check = theBoard.check(opponent, row, col, t1);
+    bool check = theBoard.check(opponent, row, col, target);
 
     //if put in check
     if (check) {
@@ -304,10 +304,8 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
         theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
       }
     }
-
-  } else {
-    return result;
   }
+  return result;
 }
 
 std::ostream &operator<<(std::ostream &out, const ChessGame &g) {

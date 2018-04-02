@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "ChessBoard.h"
 
 ChessBoard::ChessBoard(): board{}, size{8} {
@@ -308,7 +309,7 @@ bool ChessBoard::checkMate(bool player) {
 
 //check if selected piece has a legal move based on piece move rules
 //
-bool ChessBoard::move(bool player, int r, int c, int row, int col, string type) {
+bool ChessBoard::move(bool player, int r, int c, int row, int col, std::string type) {
   bool colour = board[r][c].getPiece()->colour;
 
   //check for what type of piece is being moved
@@ -362,10 +363,10 @@ bool ChessBoard::move(bool player, int r, int c, int row, int col, string type) 
 
   } else if (type == "P" || type == "p") {
     //if pawn moves return true otherwise return false
-    return movePawn(r, c, row, col);
+    return movePawn(player, r, c, row, col);
   } else {
     //if king moves return true otherwise return false
-    return moveKing(r, c, row, col);
+    return moveKing(player, r, c, row, col);
   }
 }
 
@@ -406,7 +407,7 @@ bool ChessBoard::moveDown(int r, int c, int row) {
 }
 
 // this method moves three type piece, queen, bishop, Rook
-bool ChessBoard::movePiece(int r, int c, int row, int col, string type) {
+bool ChessBoard::movePiece(int r, int c, int row, int col, std::string type) {
   if (board[r][c].getPiece()->legalMove(row, col)) { // the destination follows the rule
     // see if there is any piece along the path
     //std::string type = board[r][c].getPiece()->type;
@@ -461,7 +462,7 @@ bool ChessBoard::moveKnight(int r, int c, int row, int col) {
   return board[r][c].getPiece()->legalMove(row, col); // check if the destination is legal
 }
 
-bool ChessBoard::movePawn(int r, int c, int row, int col) {
+bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
   int hdist = col - c;
   int vdist;
   if (player == 1) {
