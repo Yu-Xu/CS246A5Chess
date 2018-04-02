@@ -533,7 +533,7 @@ bool ChessBoard::movePawn(int r, int c, int row, int col) {
   }
   return false;
 }
-
+ /*
 void ChessBoard::undo(int r, int c, int row, int col,
    std::string mover, bool moverC, const bool destC = false, const std::string dest = "") {
      if (dest == "") {
@@ -548,7 +548,7 @@ void ChessBoard::undo(int r, int c, int row, int col,
        board[row][col].setPiece(dest, destC);
        updateOb(r, c, row, col);
      }
-}
+} */
 
 std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, int v) {
   for(int i = 0; i < size; ++i) {

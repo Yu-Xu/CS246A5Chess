@@ -35,7 +35,7 @@ class ChessBoard {
   bool movePiece(int r, int c, int row, int col, std::string type);
 
   bool moveKnight(int r, int c, int row, int col);
-  bool movePawn(bool player, int r, int c, int row, int col);
+  bool movePawn(int r, int c, int row, int col);
 
 /* //tried to do undo method for it
   void undo(int r, int c, int row, int col, std::string mover, bool moverC,
