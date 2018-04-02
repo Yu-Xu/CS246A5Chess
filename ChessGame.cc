@@ -216,7 +216,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
   //check if player selected a cell with a piece or not
   if (theBoard.getBoard()[r][c].getPiece() != nullptr) {
     //get target's piece information here
-    targetC = theBoard[r][c].getPiece()->colour;
+    targetC = theBoard.getBoard()[r][c].getPiece()->colour;
     target = theBoard.getBoard()[r][c].getPiece()->type;
 
     //check if selected piece is of the player's colour
@@ -231,7 +231,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
   if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
     //get destination's piece information here
     // then use it to replace removed piece
-    destC = theBoard[row][col].getPiece()->colour;
+    destC = theBoard.getBoard()[row][col].getPiece()->colour;
     dest = theBoard.getBoard()[row][col].getPiece()->type;
 
     //check if destination piece is of the player's colour
