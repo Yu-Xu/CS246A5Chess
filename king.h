@@ -10,7 +10,7 @@ class King: public Piece {
   King(std::string s, bool colour, int row, int col);
   ~King();
 
-  bool legalMove(bool player, int row, int col) override;
+  bool legalMove(int row, int col) override;
   bool getFirst() override;
   void setFirst(bool first) override;
 };

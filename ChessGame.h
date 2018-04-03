@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <cmath>
+#include <memory>
 #include "ChessBoard.h"
 #include "player.h"
 #include "human.h"
@@ -11,8 +12,10 @@
 
 class ChessGame {
   ChessBoard theBoard;
-  Player p1;
-  Player p2;
+  // Player p1;
+  // Player p2;
+  std::unique_ptr<Player> p1;
+  std::unique_ptr<Player> p2;
 
  public:
   ChessGame();
@@ -25,8 +28,8 @@ class ChessGame {
   void setUpOb();
   void updateOb(int row, int col);
 
-  Player getPlayer1();
-  Player getPlayer2();
+  Player* getPlayer1();
+  Player* getPlayer2();
 
   //update pieces in the player
   bool move(bool player, int r, int c, int row, int col);

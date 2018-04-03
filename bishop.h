@@ -10,6 +10,6 @@ class Bishop: public Piece {
   Bishop(std::string s, bool colour, int row, int col);
   ~Bishop();
 
-  bool legalMove(bool player, int row, int col) override;
+  bool legalMove(int row, int col) override;
 };
 #endif

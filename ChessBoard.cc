@@ -1,14 +1,15 @@
 #include <iostream>
+#include <string>
 #include "ChessBoard.h"
 
 ChessBoard::ChessBoard(): board{}, size{8} {
-  // set up the bord with no pieces
+  // set up the board with no pieces
   for(int i = 0; i < size; ++i) {
     std::vector<Cell> c;
     board.push_back(c);
     for(int j = 0; j < size; ++j) {
       if (i % 2 == 0) { // even row
-        if (j % 2 == 0) { // eve col is white
+        if (j % 2 == 0) { // even col is white
           board[i].push_back(Cell{});
           board[i][j].setCell(i, j, 1);
         } else {
@@ -211,7 +212,7 @@ void ChessBoard::setUpOb() {
   }
 }
 
-// when you move a pieces you need to update the Observer
+// when you move a piece you need to update the Observer
 void ChessBoard::updateOb(int r, int c, int row, int col) {
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
@@ -234,9 +235,9 @@ bool ChessBoard::legalMove(int r, int c, int row, int col, std::string type, boo
   int hdist = col - c;
   int vdist = row - r;
   if (type == "Q" || type == "q" || type == "R" || type == "r" || type == "B" || type == "b") {
-    return movePiece(player, r, c, row, col);
+    return movePiece(r, c, row, col, type);
   } else if (type == "N" || type == "n") {
-    return moveKnight(player, r, c, row, col);
+    return moveKnight(r, c, row, col);
   } else if (type == "P" || type == "p") {
     if (hdist == 1 || hdist == -1) {
       if ((vdist == -1 && player == true)||(vdist == 1 && player == false)) {
@@ -252,11 +253,10 @@ bool ChessBoard::legalMove(int r, int c, int row, int col, std::string type, boo
   return false;
 }
 
-
 // to see if a piece at (row, col) can capture its opponent's King
 bool ChessBoard::check(bool player, int row, int col, std::string type) {
-  bool opponent = !player;
-  std::pair<int, int> k = findKing(opponent);
+  //bool opponent = !player;
+  std::pair<int, int> k = findKing(player);
   bool check = false;
   if (k.first >= 0 && k.second >= 0) {
     //int r, int c, int row, int col, std::string type
@@ -274,8 +274,8 @@ bool ChessBoard::incheck(bool player, int row, int col) {
         bool colour = board[i][j].getPiece()->colour;
         if (colour == opponent) {
           std::string type = board[i][j].getPiece()->type;
-          bool incheck = legalMove(i, j, row, col, type, opponent);
-          if (incheck == true) return true; //destination will be in check
+          bool checkable = legalMove(i, j, row, col, type, opponent);
+          if (checkable) return checkable; //destination will be in check
         }
       }
     }
@@ -307,62 +307,66 @@ bool ChessBoard::checkMate(bool player) {
 }
 
 
-
-bool ChessBoard::move(bool player, int r, int c, int row, int col) {
-  if (board[r][c].getPiece() == nullptr) {
-    return false;
-  }
-  std::string type = board[r][c].getPiece()->type;
+//check if selected piece has a legal move based on piece move rules
+//
+bool ChessBoard::move(bool player, int r, int c, int row, int col, std::string type) {
   bool colour = board[r][c].getPiece()->colour;
-  if (type == "Q" || type == "q" || type == "R" || type == "r" || type == "B" || type == "b") {
-    if (movePiece(player, r, c, row, col) ==  true) { // if Q R B can move to (row, col)
-      if (board[row][col].getPiece() != nullptr
-      && board[row][col].getPiece()->type != "k" && board[row][col].getPiece()->type != "K") { // capture
-        if (colour == board[row][col].getPiece()->colour) { // cannot capture piece with same colour
-          return false;
+
+  //check for what type of piece is being moved
+  if (type == "Q" || type == "q" || type == "R" ||
+    type == "r" || type == "B" || type == "b") {
+
+      if (movePiece(r, c, row, col, type)) { // if Q R B can move to (row, col)
+        if (board[row][col].getPiece() != nullptr) { //if opponent, capture
+
+          //capture piece
+          board[row][col].attackPiece(type, colour);
+          updateOb(r, c, row, col); // updateObservers
+          board[r][c].clearPiece();
+          if (type == "R" || type == "r") {
+            board[row][col].getPiece()->setFirst(0);
+          }
+          return true;
+
+        } else { // move without capture
+          board[row][col].setPiece(type, colour);
+          updateOb(r, c, row, col);
+          board[r][c].clearPiece();
+          if (type == "R" || type == "r") {
+            board[row][col].getPiece()->setFirst(0);
+          }
+          return true;
         }
-        // capture piece
+      }
+      return false;
+
+  } else if (type == "N" || type == "n") { //if target is a knight
+
+    if (moveKnight(r, c, row, col)) {
+      if (board[row][col].getPiece() != nullptr) {
+
         board[row][col].attackPiece(type, colour);
-        updateOb(r, c, row, col); // updateObservers
+        updateOb(r, c, row, col);
         board[r][c].clearPiece();
-        if (type == "R" || type == "r") {
-          board[row][col].getPiece()->setFirst(0);
-        }
+
         return true;
-      } else if (board[row][col].getPiece() == nullptr) { // move without capture
+      } else {
+
         board[row][col].setPiece(type, colour);
         updateOb(r, c, row, col);
         board[r][c].clearPiece();
-        if (type == "R" || type == "r") {
-          board[row][col].getPiece()->setFirst(0);
-        }
+
         return true;
       }
     }
     return false;
-  } else if (type == "N" || type == "n") {
-    if(moveKnight(player, r, c, row, col)) {
-      if (board[row][col].getPiece() != nullptr
-          && board[row][col].getPiece()->type != "k" && board[row][col].getPiece()->type != "K") {
-        if (colour == board[row][col].getPiece()->colour) {
-          return false;
-        }
-        board[row][col].attackPiece(type, colour);
-        updateOb(r, c, row, col);
-        board[r][c].clearPiece();
-        return true;
-      } else if (board[row][col].getPiece() == nullptr) {
-        board[row][col].setPiece(type, colour);
-        updateOb(r, c, row, col);
-        board[r][c].clearPiece();
-        return true;
-      }
-    }
-    return false;
-  } else if (type == "P" || type == "p"){
-    return movePawn(player, r, c, row, col); // if pawn moves return true otherwise return false
+
+  } else if (type == "P" || type == "p") {
+    //if pawn moves return true otherwise return false
+    return movePawn(r, c, row, col);
   } else {
-    return moveKing(player, r, c, row, col);  // if king moves return true otherwise return false
+    //if king moves return true otherwise return false
+    return moveKing(player, r, c, row, col);
   }
 }
 
@@ -403,10 +407,10 @@ bool ChessBoard::moveDown(int r, int c, int row) {
 }
 
 // this method moves three type piece, queen, bishop, Rook
-bool ChessBoard::movePiece(bool player, int r, int c, int row, int col) {
-  if (board[r][c].getPiece()->legalMove(player, row, col)) { // the destination follows the rule
+bool ChessBoard::movePiece(int r, int c, int row, int col, std::string type) {
+  if (board[r][c].getPiece()->legalMove(row, col)) { // the destination follows the rule
     // see if there is any piece along the path
-    std::string type = board[r][c].getPiece()->type;
+    //std::string type = board[r][c].getPiece()->type;
     int hdist = col - c;
     int vdist = row - r;
     if (row == r && (type == "Q" || type == "q" || type == "R" || type == "r")) {
@@ -421,7 +425,7 @@ bool ChessBoard::movePiece(bool player, int r, int c, int row, int col) {
       } else { // moves up
         return this->moveUp(r, c, row);
       }
-    } else { // moves diognal direction
+    } else { // moves diagonal direction
       if (type == "Q" || type == "q" || type == "B" || type == "b") {
         if (vdist < 0 && hdist > 0) {
           for (int i = r - 1, j = c + 1; i > row && j < col; i--, j++) {
@@ -452,32 +456,37 @@ bool ChessBoard::movePiece(bool player, int r, int c, int row, int col) {
   return false;
 }
 
-bool ChessBoard::moveKnight(bool player, int r, int c, int row, int col) {
+bool ChessBoard::moveKnight(int r, int c, int row, int col) {
   // since knight can jump through the pieces
   // no need to check along the path
-  return board[r][c].getPiece()->legalMove(player, row, col); // check if the destination is legal
+  return board[r][c].getPiece()->legalMove(row, col); // check if the destination is legal
 }
 
-bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
+bool ChessBoard::movePawn(int r, int c, int row, int col) {
   int hdist = col - c;
   int vdist;
-  if (player == 1) {
+
+  if (r > row) {
     vdist = r - row;
   } else {
     vdist = row - r;
   }
-  if (board[r][c].getPiece()->legalMove(player, row, col)) {
+
+  //check piece (pawn) rules
+  if (board[r][c].getPiece()->legalMove(row, col)) {
+
     std::string type = board[r][c].getPiece()->type;
     bool colour = board[r][c].getPiece()->colour;
+
     if ((hdist == 1 || hdist == -1) && vdist == 1) { //capture
-      if (board[row][col].getPiece() != nullptr
-      && colour != board[row][col].getPiece()->colour) { // normal capture
-        if (board[row][col].getPiece()->type != "k" && board[row][col].getPiece()->type != "K") {
-          board[row][col].attackPiece(type, colour);
-          updateOb(r, c, row, col);
-          board[r][c].clearPiece();
-        }
-        return true;
+      if (board[row][col].getPiece() != nullptr) { // normal capture
+          if (board[row][col].getPiece()->type != "k" &&
+            board[row][col].getPiece()->type != "K") {
+              board[row][col].attackPiece(type, colour);
+              updateOb(r, c, row, col);
+              board[r][c].clearPiece();
+          }
+          return true;
       } else if (board[r][col].getPiece() != nullptr
         && board[row][col].getPiece() == nullptr
         && colour != board[r][col].getPiece()->colour) { // en passant
@@ -529,16 +538,35 @@ bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
   }
   return false;
 }
+ /*
+void ChessBoard::undo(int r, int c, int row, int col,
+   std::string mover, bool moverC, const bool destC = false, const std::string dest = "") {
+     if (dest == "") {
+       board[r][c].setPiece(mover, moverC);
+       updateOb(r, c, row, col);
+       board[row][col].clearPiece();
+     } else {
+       board[r][c].setPiece(mover, moverC);
+       updateOb(r, c, row, col);
+       board[row][col].clearPiece();
+
+       board[row][col].setPiece(dest, destC);
+       updateOb(r, c, row, col);
+     }
+} */
 
 std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, int v) {
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
+
       if (board[i][j].getPiece() != nullptr) {
         std::string type = board[i][j].getPiece()->type;
         bool color = board[i][j].getPiece()->colour;
+
         if ((type == "R" || type == "r") && (color == colour)) {
           int hdist = j - col;
           int vdist = i - row;
+          
           if (h == 0) {
             if ((v > 0 && vdist > 0) || (v < 0 && vdist < 0)) {
               return  std::pair<int, int>(i, j);
@@ -554,7 +582,9 @@ std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, i
             }
           }
         }
+
       }
+
     }
   }
   return  std::pair<int, int>(-1, -1);
@@ -613,191 +643,37 @@ bool ChessBoard::kingLeft(int r, int c, int row, int col, std::pair<int, int> k,
   return true;
 }
 
-bool ChessBoard::kingDown(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
-  for (int i = r; i <= k.first; i++) {
-    if (i <= row && i > r) {
-      if(incheck(player, i, c) == true || board[i][c].getPiece() != nullptr) {
-        return false;
-      }
-    }
-    if(i != r && board[i][c].getPiece() != nullptr) {
-        return false;
-    }
-  }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
-  board[row - 1][col].setPiece(rtype, rcolour);
-  updateOb(k.first, k.second, row - 1, col);
-  board[row][col].setPiece(type, colour);
-  board[k.first][k.second].clearPiece();
-  updateOb(r, c, row, col);
-  board[r][c].clearPiece();
-  return true;
-}
-
-bool ChessBoard::kingUp(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
-  for (int i = r; i >= k.first; i--) {
-    if (i >= row && i < r) {
-      if(incheck(player, i, c) == true || board[i][c].getPiece() != nullptr) {
-        return false;
-      }
-    }
-    if(i != r && board[i][c].getPiece() != nullptr) {
-        return false;
-    }
-  }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
-  board[row + 1][col].setPiece(rtype, rcolour);
-  updateOb(k.first, k.second, row + 1, col);
-  board[row][col].setPiece(type, colour);
-  board[k.first][k.second].clearPiece();
-  updateOb(r, c, row, col);
-  board[r][c].clearPiece();
-  return true;
-}
-
-bool ChessBoard::kingRightDown(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
-  for (int i = r, j = c; i <= k.first &&  j <= k.second; i++, j++) {
-    if (i <= row && j <= col && i > r && j > c) {
-      if(incheck(player, i, j) == true || board[i][j].getPiece() != nullptr) {
-        return false;
-      }
-    }
-    if(i != r && j != c && board[i][j].getPiece() != nullptr) {
-        return false;
-    }
-  }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
-  board[row - 1][col - 1].setPiece(rtype, rcolour);
-  updateOb(k.first, k.second, row - 1, col - 1);
-  board[row][col].setPiece(type, colour);
-  board[k.first][k.second].clearPiece();
-  updateOb(r, c, row, col);
-  board[r][c].clearPiece();
-  return true;
-}
-
-bool ChessBoard::kingLeftDown(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
-  for (int i = r, j = c; i <= k.first &&  j >= k.second; i++, j--) { // moves left down
-    if (i <= row && j >= col && i > r && j < c) {
-      if(incheck(player, i, j) == true || board[i][j].getPiece() != nullptr) {
-        return false;
-      }
-    }
-    if(i != r && j != c && board[i][j].getPiece() != nullptr) {
-        return false;
-    }
-  }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
-  board[row - 1][col + 1].setPiece(rtype, rcolour);
-  updateOb(k.first, k.second, row - 1, col + 1);
-  board[row][col].setPiece(type, colour);
-  board[k.first][k.second].clearPiece();
-  updateOb(r, c, row, col);
-  board[r][c].clearPiece();
-  return true;
-}
-
-bool ChessBoard::kingRightUp(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
-  for (int i = r, j = c; i >= row &&  j <= col; i--, j++) { // moves up right
-    if (i >= row && j <= col && i < r && j > c) {
-      if(incheck(player, i, j) == true || board[i][j].getPiece() != nullptr) {
-        return false;
-      }
-    }
-    if(i != r && j != c && board[i][j].getPiece() != nullptr) {
-        return false;
-    }
-  }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
-  board[row + 1][col - 1].setPiece(rtype, rcolour);
-  updateOb(k.first, k.second, row + 1, col - 1);
-  board[row][col].setPiece(type, colour);
-  board[k.first][k.second].clearPiece();
-  updateOb(r, c, row, col);
-  board[r][c].clearPiece();
-  return true;
-}
-
-bool ChessBoard::kingLeftUp(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
-  for (int i = r, j = c; i >= row &&  j >= col; i--, j--) {
-    if (i >= row && j >= col && i < r && j < c) {
-      if(incheck(player, i, j) == true || board[i][j].getPiece() != nullptr) {
-        return false;
-      }
-    }
-    if(i != r && j != c && board[i][j].getPiece() != nullptr) {
-        return false;
-    }
-  }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
-  board[row + 1][col + 1].setPiece(rtype, rcolour);
-  updateOb(k.first, k.second, row + 1, col + 1);
-  board[row][col].setPiece(type, colour);
-  board[k.first][k.second].clearPiece();
-  updateOb(r, c, row, col);
-  board[r][c].clearPiece();
-  return true;
-}
-
 bool ChessBoard::moveKing(bool player, int r, int c, int row, int col) {
-  if (board[r][c].getPiece()->legalMove(player, row, col)) {
+  if (board[r][c].getPiece()->legalMove(row, col)) {
+
     std::string type = board[r][c].getPiece()->type;
     bool colour = board[r][c].getPiece()->colour;
     int hdist = col - c;
     int vdist = row - r;
-    if (((vdist == 0)&&(hdist == 2 || hdist == -2)) ||
-      ((hdist == 0)&&(vdist == 2 || vdist == -2)) ||
-      ((hdist == -2 || hdist == 2)&&(vdist == 2 || vdist == -2))) { // castling
-        std::pair<int, int> k = findRook(player, row, col, hdist, vdist);
-         if (k.first >= 0) { // king moves towards a Rook
-          if (board[r][c].getPiece()->getFirst() == true
-          && board[k.first][k.second].getPiece()->getFirst() == true) { // king and Rook didnt move before
-            // eight directions castling
-            if (vdist == 0 && hdist == 2) { // moves right
-              return kingRight(r, c,row, col, k, player);
-            } else if (vdist == 0 && hdist == -2) { // moves left
-              return kingLeft(r, c,row, col, k, player);
-            } else if (hdist == 0 && vdist == 2) { // moves down
-              return kingDown(r, c,row, col, k, player);
-            } else if (hdist == 0 && vdist == -2) { // moves up
-              return kingDown(r, c, row, col, k, player);
-            } else if (hdist == 2 && vdist == 2) { // moves right and down
-              return kingRightDown(r, c, row, col, k, player);
-            } else if (hdist == 2 && vdist == -2) {
-              return kingLeftDown(r, c, row, col, k, player);
-            } else if (hdist == -2 && vdist == 2) {
-              return kingRightUp(r, c, row, col, k, player);
-            } else if (hdist == -2 && vdist == -2) {
-              return kingLeftUp(r, c, row, col, k, player);
-            }
+
+    if (hdist == 2 || hdist == -2) { // castling
+      std::pair<int, int> k = findRook(player, row, col, hdist, vdist);
+      //king moves towards a Rook
+      if (k.first >= 0) {
+         //king and Rook first move?
+        if (board[k.first][k.second].getPiece()->getFirst() == true) {
+          //castling
+          if (hdist == 2) { // moves right
+            return kingRight(r, c,row, col, k, player);
+          } else { // moves left
+            return kingLeft(r, c,row, col, k, player);
+          }
         } else {
           return false;
         }
       } else {
         return false;
       }
-    }
-    // normal move
-    bool incheck = this->incheck(player, row, col);
-    if (incheck ==  true) { // illegal move king will be in check
+    }//end of castling
+
+    //normal move
+    bool selfCheck = this->incheck(player, row, col);
+    if (selfCheck) { // illegal move king will be in check
       return false;
     } else { // destination will not make king in check
       if (board[row][col].getPiece() == nullptr) {

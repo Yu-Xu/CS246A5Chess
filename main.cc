@@ -64,8 +64,8 @@ int main(int argc, char *argv[]) {
         if(turn == 1 && !h1) {
           // game.computerMove(turn);
           std::cout << "Here goes nothing.." << std::endl;
-          std::cout << "Name is: " << game.getPlayer1().getPlayerName() << std::endl;
-          game.getPlayer1().makeAMove();
+          std::cout << "Name is: " << game.getPlayer1()->getPlayerName() << std::endl;
+          game.getPlayer1()->makeAMove();
           //Delete next three lines
           int temp;
           std::cout << "Freeeze:";
