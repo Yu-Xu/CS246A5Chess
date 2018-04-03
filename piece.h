@@ -13,7 +13,7 @@ struct Piece: public Subject, public Observer  {
   Piece(std::string t, bool colour, int row, int col);
   ~Piece() override;
 
-  void notify(bool player, int r, int c, std::string type, std::vector<std::pair<int, int>> &v) override;
+  void notify(bool player, int r, int c) override;
   virtual bool legalMove(bool player, int row, int col) = 0;;
   virtual bool getPassant();
   virtual bool getFirst();

@@ -2,6 +2,7 @@
 #define CHESSB_H
 #include <iostream>
 #include <vector>
+#include <map>
 #include <utility>
 #include "cell.h"
 #include <string>
@@ -23,7 +24,8 @@ class ChessBoard {
   void addPiece(int r, int c, std::string type, bool colour);
   void removePiece(int r, int c);
   void setUpOb();
-  void updateOb(int r, int c, int row, int col);
+  void addOb(int r, int c);
+  void removeOb(int r, int c);
   bool checkBoard();
 
   bool move(bool player, int r, int c, int row, int col);
@@ -51,11 +53,24 @@ class ChessBoard {
   bool check(bool player, int row, int col, std::string type);
   bool incheck(bool player, int row, int col);
   bool checkMate(bool player);
+  bool staleMate();
   std::pair<int, int> findKing(bool colour);
   std::pair<int, int> findRook(bool colour, int row, int col, int h, int v);
 
+  std::vector<std::pair<int, int>> oneLegalMove(bool player, int r,int c, std::string type);
+  std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> computerMove(bool player, std::string level);
+  std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> computerL1(bool player);
+  std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> computerL2(bool player);
+  std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> computerL3(bool player);
 
-  friend std::ostream &operator<<(std::ostream &out, const ChessBoard &b);
+  std::vector<std::pair<int, int>> legal(int r, int c, std::string type, bool player);
+  std::vector<std::pair<int, int>> legalN(int r, int c, std::string type, bool player);
+  std::vector<std::pair<int, int>> legalK(int r, int c, std::string type, bool player);
+  std::vector<std::pair<int, int>> legalP(int r, int c, std::string type, bool player);
+  std::vector<std::pair<int, int>> legalRange(int r, int c, std::string type, bool player);
+
+
+  friend std::ostream &operator<<(std::ostream &out, ChessBoard &b);
 };
 
 #endif

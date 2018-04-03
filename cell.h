@@ -14,6 +14,7 @@ class Cell {
 
   void setCell(int r,int c,bool colour);
   Piece *&getPiece();
+  bool getColour();
   void clearPiece();
 
   //bool movePiece(bool player, int row, int col);

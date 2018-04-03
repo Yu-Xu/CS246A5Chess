@@ -1,6 +1,5 @@
 #include "cell.h"
-#include "info.h"
-//#include "piece.h"
+//#include "info.h"
 #include "queen.h"
 #include "king.h"
 #include "pawn.h"
@@ -25,6 +24,10 @@ Piece *&Cell::getPiece() {
   return p;
 }
 
+bool Cell::getColour() {
+  return colour;
+}
+
 void Cell::clearPiece() {
   delete p;
   p = nullptr;
@@ -44,7 +47,7 @@ void Cell::setPiece(std::string s, bool colour) {
     p = new Rook{s, colour, r, c};
   } else if (s == "b" || s == "B") {
     p = new Bishop{s, colour, r, c};
-  } else {
+  } else if (s == "P" || s == "p") {
     p = new Pawn{s, colour, r, c};
   }
 }

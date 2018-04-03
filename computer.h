@@ -3,15 +3,14 @@
 #include "player.h"
 
 class Computer: public Player {
-  int level;
+  std::string level;
 
  public:
-  Computer(bool colour);
+  Computer(bool colour, std::string player);
   ~Computer();
 
-  void setLevel(int l) override:
-  std::vector<std::pair<int, int>> legalRange(int r, int c, std::string type, bool player) override;
-  std::vector<std::pair<int, int>> computerMove(bool player, int r, int c, std::string type) override;
+  void setLevel(std::string l) override;
+  std::string getLevel() override;
 
 };
 #endif

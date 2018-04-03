@@ -23,7 +23,7 @@ class Player {
   std::vector<std::pair<int, int>> pawns;
 
   public:
-  Player(bool colour);
+  Player(bool colour, std::string player);
   virtual ~Player();
   std::vector<std::pair<int, int>> &getRooks();
   std::vector<std::pair<int, int>> &getBishops();
@@ -31,8 +31,9 @@ class Player {
   std::vector<std::pair<int, int>> &getPawns();
   std::vector<std::pair<int, int>> &getKing();
   std::vector<std::pair<int, int>> &getQueen();
-  void setPlayer(std::string p);
-  virtual void setLevel(int l);
+  std::vector<std::pair<int, int>> getPiece();
+  virtual void setLevel(std::string l);
+  virtual std::string getLevel();
   bool getColour();
 };
 

@@ -11,9 +11,7 @@ class Subject {
 
  public:
   void attach(Observer *o);
-  void deattach(Observer *o);
-  void getOb();
-  void notifyObservers(bool player, int r, int c, std::string type, std::vector<std::pair<int, int>> &v);
+  void notifyObservers(bool player, int r, int c);
   virtual ~Subject() = 0;
 };
 

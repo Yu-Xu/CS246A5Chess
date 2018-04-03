@@ -5,7 +5,7 @@
 class Human: public Player {
 
  public:
-  Human(bool colour);
+  Human(bool colour, std::string player);
   ~Human();
 
 };

@@ -1,16 +1,16 @@
 #include "player.h"
 
-Player::Player(bool colour): player{""}, colour{colour}, queen{}, king{}
+Player::Player(bool colour, std::string player): player{player}, colour{colour}, queen{}, king{}
  , knights{}, bishops{}, rooks{}, pawns{} {}
 
 Player::~Player() {}
 
-void Player::setPlayer(std::string p) {
-  this->player = p;
+void Player::setLevel(std::string l) {
+  return;
 }
 
-void Player::setLevel(int l) {
-  return;
+std::string Player::getLevel() {
+  return "";
 }
 
 std::vector<std::pair<int, int>> &Player::getRooks() {
@@ -31,6 +31,17 @@ std::vector<std::pair<int, int>> &Player::getKing() {
 
 std::vector<std::pair<int, int>> &Player::getQueen() {
   return queen;
+}
+
+std::vector<std::pair<int, int>> Player::getPiece() {
+  std::vector<std::pair<int, int>> p;
+  p.insert(std::end(p), std::begin(queen), std::end(queen));
+  p.insert(std::end(p), std::begin(knights), std::end(knights));
+  p.insert(std::end(p), std::begin(pawns), std::end(pawns));
+  p.insert(std::end(p), std::begin(king), std::end(king));
+  p.insert(std::end(p), std::begin(bishops), std::end(bishops));
+  p.insert(std::end(p), std::begin(rooks), std::end(rooks));
+  return p;
 }
 
 bool Player::getColour() {
