@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
       }  else if (cmd == "move") {
         if(turn == 1 && !h1) {
           // game.computerMove(turn);
-          std::cout << "Name is: " << game.getPlayer1()->getPlayerName() << std::endl;
+          //std::cout << "Name is: " << game.getPlayer1()->getPlayerName() << std::endl;
           int r,c,row,col;
 
           // auto moveFromTo = game.getPlayer1()->makeAMove();
@@ -100,6 +100,18 @@ int main(int argc, char *argv[]) {
         }
         else if(turn == 0 && !h2) {
           //game.computerMove(turn);
+          int r,c,row,col;
+          do
+          {
+            auto moveFromTo = game.getPlayer2()->makeAMove();
+            std::cout << moveFromTo.first.first << ", " << moveFromTo.first.second << " to " << moveFromTo.second.first << ", " << moveFromTo.second.second << std::endl;
+
+            r = moveFromTo.first.first;
+            c = moveFromTo.first.second;
+            row = moveFromTo.second.first;
+            col = moveFromTo.second.second;
+          }
+          while(!game.move(turn, r, c, row, col));
         }
         else if(turn == 1 && h1) {
           // string from;
