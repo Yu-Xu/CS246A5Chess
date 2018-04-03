@@ -17,7 +17,9 @@ bool Pawn::legalMove(int row, int col) {
   } else {
     vdist = row - r;
   }
+
   int hdist = col - c;
+
   if (first == true) { // first step
     if (((vdist == 1) || (vdist == 2)) && col == c) { //first step move 1 or 2 forward
       if (vdist == 2) {
@@ -34,6 +36,7 @@ bool Pawn::legalMove(int row, int col) {
       return false;
     }
   }
+
   return false;
 }
 

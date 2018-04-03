@@ -1,7 +1,10 @@
 #include "ChessGame.h"
 #include <string>
 
-ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {}
+ChessGame::ChessGame():
+  theBoard{ChessBoard{}},
+  p1{std::make_unique<Player>(true)},
+  p2{std::make_unique<Player>(false)} {}
 
 ChessGame::~ChessGame() {}
 
@@ -18,119 +21,120 @@ std::pair<int, int> ChessGame::getLocation(std::string location) {
 void ChessGame::startGame(std::string player1, std::string player2) {
   theBoard.init();
   int len = 8;
-  this->p1.setPlayer(player1);
-  this->p2.setPlayer(player2);
+  this->p1->setPlayer(player1);
+  this->p2->setPlayer(player2);
   if (player1 != "human") {
     char c = player1[8];
     if (c == '1') {
-      this->p1.setLevel(1);
+      this->p1->setLevel(1);
     } else if (c == '2') {
-      this->p1.setLevel(2);
+      this->p1->setLevel(2);
     } else if (c == '3') {
-      this->p1.setLevel(3);
+      this->p1->setLevel(3);
     } else if (c == '4') {
-      this->p1.setLevel(4);
+      this->p1->setLevel(4);
     }
   }
   if (player2 != "human") {
     char c = player2[8];
     if (c == '1') {
-      this->p2.setLevel(1);
+      this->p2->setLevel(1);
     } else if (c == '2') {
-      this->p2.setLevel(2);
+      this->p2->setLevel(2);
     } else if (c == '3') {
-      this->p2.setLevel(3);
+      this->p2->setLevel(3);
     } else if (c == '4') {
-      this->p2.setLevel(4);
+      this->p2->setLevel(4);
     }
   }
   // player owns 16 pieces
-  p1.getRooks().push_back(std::pair<int,int>(7, 0));
-  p1.getRooks().push_back(std::pair<int,int>(7, 7));
-  p1.getKnights().push_back(std::pair<int,int>(7, 1));
-  p1.getKnights().push_back(std::pair<int,int>(7, 6));
-  p1.getBishops().push_back(std::pair<int,int>(7, 2));
-  p1.getBishops().push_back(std::pair<int,int>(7, 5));
-  p1.getQueen().push_back(std::pair<int,int>(7, 3));
-  p1.getKing().push_back(std::pair<int,int>(7, 4));
+  p1->getRooks().push_back(std::pair<int,int>(7, 0));
+  p1->getRooks().push_back(std::pair<int,int>(7, 7));
+  p1->getKnights().push_back(std::pair<int,int>(7, 1));
+  p1->getKnights().push_back(std::pair<int,int>(7, 6));
+  p1->getBishops().push_back(std::pair<int,int>(7, 2));
+  p1->getBishops().push_back(std::pair<int,int>(7, 5));
+  p1->getQueen().push_back(std::pair<int,int>(7, 3));
+  p1->getKing().push_back(std::pair<int,int>(7, 4));
   for (int i = 0; i < len; i++) {
-    p1.getPawns().push_back(std::pair<int,int>(6, i));
+    p1->getPawns().push_back(std::pair<int,int>(6, i));
   }
-  p2.getRooks().push_back(std::pair<int,int>(0, 1));
-  p2.getRooks().push_back(std::pair<int,int>(0, 7));
-  p2.getKnights().push_back(std::pair<int,int>(0, 1));
-  p2.getKnights().push_back(std::pair<int,int>(0, 6));
-  p2.getBishops().push_back(std::pair<int,int>(0, 2));
-  p2.getBishops().push_back(std::pair<int,int>(0, 5));
-  p2.getQueen().push_back(std::pair<int,int>(0, 3));
-  p2.getKing().push_back(std::pair<int,int>(0, 4));
+  p2->getRooks().push_back(std::pair<int,int>(0, 1));
+  p2->getRooks().push_back(std::pair<int,int>(0, 7));
+  p2->getKnights().push_back(std::pair<int,int>(0, 1));
+  p2->getKnights().push_back(std::pair<int,int>(0, 6));
+  p2->getBishops().push_back(std::pair<int,int>(0, 2));
+  p2->getBishops().push_back(std::pair<int,int>(0, 5));
+  p2->getQueen().push_back(std::pair<int,int>(0, 3));
+  p2->getKing().push_back(std::pair<int,int>(0, 4));
   for (int i = 0; i < len; i++) {
-    p2.getPawns().push_back(std::pair<int,int>(1, i));
+    p2->getPawns().push_back(std::pair<int,int>(1, i));
   }
 }
 
 // add pieces to player when setup
 void ChessGame::add(bool player, std::string type, int row, int col) {
   std::pair<int, int> k = std::pair<int, int>(row, col);
-  Player &p = player ? p1: p2;//player 1
+  Player *p = player ? p1.get() : p2.get(); //player 1
+
   if (type == "P" || type == "p") {
-    p.getPawns().push_back(k);
+    p->getPawns().push_back(k);
   } else if (type == "B" || type == "b") {
-    p.getBishops().push_back(k);
+    p->getBishops().push_back(k);
   } else if (type == "N" || type == "n") {
-    p.getKnights().push_back(k);
+    p->getKnights().push_back(k);
   } else if (type == "R" || type == "r") {
-    p.getRooks().push_back(k);
+    p->getRooks().push_back(k);
   } else if (type == "Q" || type == "q") {
-    p.getQueen().push_back(k);
+    p->getQueen().push_back(k);
   } else if (type == "K" || type == "k") {
-    p.getKing().push_back(k);
+    p->getKing().push_back(k);
   }
 }
 
 void ChessGame::remove(bool player, std::string type, int r, int c) {
   // remove pieces from player when setup
-  Player &p = player ? p1: p2;
+  Player *p = player ? p1.get() : p2.get();
   if (type == "P" || type == "p") {
-    int len = p.getPawns().size();
+    int len = p->getPawns().size();
     for (int i = 0; i < len; i++) {
-      if (p.getPawns()[i].first == r && p.getPawns()[i].second == c){
-        p.getPawns().erase(p.getPawns().begin() + i);
+      if (p->getPawns()[i].first == r && p->getPawns()[i].second == c){
+        p->getPawns().erase(p->getPawns().begin() + i);
       }
     }
   } else if (type == "B" || type == "b") {
-    int len = p.getBishops().size();
+    int len = p->getBishops().size();
     for (int i = 0; i < len; i++) {
-      if (p.getBishops()[i].first == r && p.getBishops()[i].second == c){
-        p.getBishops().erase(p.getBishops().begin() + i);
+      if (p->getBishops()[i].first == r && p->getBishops()[i].second == c){
+        p->getBishops().erase(p->getBishops().begin() + i);
       }
     }
   } else if (type == "N" || type == "n") {
-    int len = p.getKnights().size();
+    int len = p->getKnights().size();
     for (int i = 0; i < len; i++) {
-      if (p.getKnights()[i].first == r && p.getKnights()[i].second == c){
-        p.getKnights().erase(p.getKnights().begin() + i);
+      if (p->getKnights()[i].first == r && p->getKnights()[i].second == c){
+        p->getKnights().erase(p->getKnights().begin() + i);
       }
     }
   } else if (type == "R" || type == "r") {
-    int len = p.getRooks().size();
+    int len = p->getRooks().size();
     for (int i = 0; i < len; i++) {
-      if (p.getRooks()[i].first == r && p.getRooks()[i].second == c){
-        p.getRooks().erase(p.getRooks().begin() + i);
+      if (p->getRooks()[i].first == r && p->getRooks()[i].second == c){
+        p->getRooks().erase(p->getRooks().begin() + i);
       }
     }
   } else if (type == "Q" || type == "q") {
-    int len = p.getQueen().size();
+    int len = p->getQueen().size();
     for (int i = 0; i < len; i++) {
-      if (p.getQueen()[i].first == r && p.getQueen()[i].second == c){
-        p.getQueen().erase(p.getQueen().begin() + i);
+      if (p->getQueen()[i].first == r && p->getQueen()[i].second == c){
+        p->getQueen().erase(p->getQueen().begin() + i);
       }
     }
   } else if (type == "K" || type == "k") {
-    int len = p.getKing().size();
+    int len = p->getKing().size();
     for (int i = 0; i < len; i++) {
-      if (p.getKing()[i].first == r && p.getKing()[i].second == c){
-        p.getKing().erase(p.getKing().begin() + i);
+      if (p->getKing()[i].first == r && p->getKing()[i].second == c){
+        p->getKing().erase(p->getKing().begin() + i);
       }
     }
   }
@@ -253,9 +257,9 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
     //find own king
     std::pair<int, int> myKing;
     if (player) {
-      myKing = p1.getKing()[0];
+      myKing = p1->getKing()[0];
     } else {
-      myKing = p2.getKing()[0];
+      myKing = p2->getKing()[0];
     }
     //check king if in check
     bool selfCheck = theBoard.incheck(player, myKing.first, myKing.second);
@@ -298,16 +302,16 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
 
       // when opponent moves
       // change all your pawns passant to false;
-      if (p1.getColour() == opponent) {
-        int len = p1.getPawns().size();
+      if (p1->getColour() == opponent) {
+        int len = p1->getPawns().size();
         for (int i = 0; i < len; i++) {
-          std::pair<int, int> pawn = p1.getPawns()[i];
+          std::pair<int, int> pawn = p1->getPawns()[i];
           theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
         }
       } else {
-        int len = p2.getPawns().size();
+        int len = p2->getPawns().size();
         for (int i = 0; i < len; i++) {
-          std::pair<int, int> pawn = p2.getPawns()[i];
+          std::pair<int, int> pawn = p2->getPawns()[i];
           theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
         }
       }

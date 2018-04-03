@@ -4,13 +4,14 @@
 #include <string>
 #include <utility>
 #include <cmath>
+#include <memory>
 #include "ChessBoard.h"
 #include "player.h"
 
 class ChessGame {
   ChessBoard theBoard;
-  Player p1;
-  Player p2;
+  std::unique_ptr<Player> p1;
+  std::unique_ptr<Player> p2;
 
  public:
   ChessGame();

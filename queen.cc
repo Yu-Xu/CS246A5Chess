@@ -11,11 +11,9 @@ bool Queen::legalMove(int row, int col) {
   // std::cout << "Pawn row " << row << " col " << col << std::endl;
   if ((r == row && c != col) || (r != row && c == col)) {
     return true;
+  } else if ((row - r == c - col) || (row - r == col - c)) {
+    return true;
   } else {
-    if ((row - r == c - col) || (row - r == col - c)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 }

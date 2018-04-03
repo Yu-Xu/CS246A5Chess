@@ -43,12 +43,7 @@ class ChessBoard {
 
   bool kingRight(int r, int c, int row, int col, std::pair<int, int> k, bool player);
   bool kingLeft(int r, int c, int row, int col, std::pair<int, int> k, bool player);
-  bool kingDown(int r, int c, int row, int col, std::pair<int, int> k, bool player);
-  bool kingUp(int r, int c, int row, int col, std::pair<int, int> k, bool player);
-  bool kingRightDown(int r, int c, int row, int col, std::pair<int, int> k, bool player);
-  bool kingRightUp(int r, int c, int row, int col, std::pair<int, int> k, bool player);
-  bool kingLeftUp(int r, int c, int row, int col, std::pair<int, int> k, bool player);
-  bool kingLeftDown(int r, int c, int row, int col, std::pair<int, int> k, bool player);
+
   bool moveKing(bool player, int r, int c, int row, int col);
 
   bool legalMove(int r, int c, int row, int col, std::string type, bool player);
