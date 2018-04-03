@@ -5,8 +5,12 @@
 class Human: public Player {
 
  public:
-  Human(bool colour);
+  Human(std::string name, bool colour);
   ~Human();
+
+  std::pair<int, int> getLocation(std::string location);
+
+  std::pair< std::pair<int, int>, std::pair<int, int> > makeAMove() override;
 
 };
 #endif

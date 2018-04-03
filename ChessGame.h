@@ -17,6 +17,8 @@ class ChessGame {
   std::unique_ptr<Player> p1;
   std::unique_ptr<Player> p2;
 
+  //std::vector<std::unique_ptr<Player> > players;
+
  public:
   ChessGame();
   ~ChessGame();

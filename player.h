@@ -37,7 +37,7 @@ class Player {
   virtual void setLevel(int l);
   bool getColour();
   
-  virtual std::pair< std::pair<int, int>, std::pair<int, int> > makeAMove(); //Maybe make pure virtual
+  virtual std::pair< std::pair<int, int>, std::pair<int, int> > makeAMove() = 0; //Maybe make pure virtual
 };
 
 #endif

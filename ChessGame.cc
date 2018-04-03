@@ -1,10 +1,15 @@
 #include "ChessGame.h"
 #include <string>
 
-ChessGame::ChessGame(): 
+// ChessGame::ChessGame(): 
+//   theBoard{ChessBoard{}},
+//   p1{std::make_unique<Player>(true)},
+//   p2{std::make_unique<Player>(false)} {}
+
+  ChessGame::ChessGame(): 
   theBoard{ChessBoard{}},
-  p1{std::make_unique<Player>(true)},
-  p2{std::make_unique<Player>(false)} {}
+  p1{std::make_unique<Human>("noname1", 1)},
+  p2{std::make_unique<Human>("noname2", 1)} {}
 
 // ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {
 // }
@@ -27,15 +32,15 @@ void ChessGame::startGame(std::string player1, std::string player2) {
   if(player1 == "human")
   {
   	//p1 = Human{1};
-    p1 = std::make_unique<Player>(Human{1});
+    //p1 = std::make_unique<Human>(Human{1});
+    p1 = std::make_unique<Human>("somename",1);
   }
   else
   {
   	std::cout << "In startGame as a computer player1" << std::endl;
   	char c = player1[8];
     if (c == '1') {
-    	std::cout << "c == 1" << std::endl;
-      	p1 = std::make_unique<Player>(FirstLevel{"Fake Player", 1});
+      p1 = std::make_unique<FirstLevel>(FirstLevel{"Fake Player", 1});
     } else if (c == '2') {
       //p1 = secondLevel{1};
     } else if (c == '3') {
@@ -49,14 +54,14 @@ void ChessGame::startGame(std::string player1, std::string player2) {
   if(player2 == "human")
   {
   	//p2 = Human{0};
-    p2 = std::make_unique<Player>(Human{0});
+    p2 = std::make_unique<Human>("somename", 0);
   }
   else
   {
   	char c = player1[8];
     if (c == '1') {
       //p2 = FirstLevel{"Computer fake", 0};
-      p2 = std::make_unique<Player>(FirstLevel{"Computer Fake", 0});
+      p2 = std::make_unique<FirstLevel>(FirstLevel{"Computer Fake", 0});
 
     } else if (c == '2') {
       //p2 = secondLevel{0};
@@ -119,7 +124,7 @@ void ChessGame::startGame(std::string player1, std::string player2) {
 // add pieces to player when setup
 void ChessGame::add(bool player, std::string type, int row, int col) {
   std::pair<int, int> k = std::pair<int, int>(row, col);
-  Player *p = player ? p1.get(): p2.get();//player 1
+  Player *p = (player ? p1.get(): p2.get());//player 1
 
   if (type == "P" || type == "p") {
     p->getPawns().push_back(k);
@@ -259,6 +264,11 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
 
   std::string dest = "";
   bool destC;
+
+  std::cout << "r: " << r << ", c: " << c << ", row: " << row << ", col: " << col << std::endl;
+
+  if(r > 7 || r < 0 || c > 7 || c < 0 || row > 7 || row < 0 || col > 7 || col < 0)
+    return false;
 
   //check if player selected a cell with a piece or not
   if (theBoard.getBoard()[r][c].getPiece() != nullptr) {

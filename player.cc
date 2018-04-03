@@ -44,8 +44,8 @@ std::string Player::getPlayerName(){
 	return this->name;
 }
 
-std::pair< std::pair<int, int>, std::pair<int, int> > Player::makeAMove()
-{
-	std::cout << "WE are in player.cc's makeAMove" << std::endl;
-	return std::pair< std::pair<int, int>, std::pair<int, int> >();
-}
+// std::pair< std::pair<int, int>, std::pair<int, int> > Player::makeAMove()
+// {
+// 	std::cout << "WE are in player.cc's makeAMove" << std::endl;
+// 	return std::pair< std::pair<int, int>, std::pair<int, int> >();
+// }
