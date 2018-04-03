@@ -65,27 +65,28 @@ void ChessGame::startGame() {
   p1->getQueen().push_back(std::pair<int,int>(7, 3));
   p1->getKing().push_back(std::pair<int,int>(7, 4));
   // GraphicsDisplay
-  gd->setPiece(-1, -1, 7, 0, "R", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 7, "R", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 1, "N", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 6, "N", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 2, "B", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 5, "B", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 3, "Q", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 4, "K", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 1, "R", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 8, "R", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 2, "N", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 7, "N", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 3, "B", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 6, "B", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 4, "Q", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 5, "K", false, std::pair<int, int> (-1, -1));
 
-  gd->setPiece(-1, -1, 0, 0, "r", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 7, "r", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 1, "n", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 6, "n", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 2, "b", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 5, "b", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 3, "q", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 4, "k", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 1, "r", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 8, "r", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 2, "n", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 7, "n", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 3, "b", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 6, "b", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 4, "q", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 5, "k", false, std::pair<int, int> (-1, -1));
   for (int i = 0; i < len; i++) {
     p1->getPawns().push_back(std::pair<int,int>(6, i));
-    gd->setPiece(-1, -1, 6, i, "P", false, std::pair<int, int> (-1, -1));
-    gd->setPiece(-1, -1, 1, i, "p", false, std::pair<int, int> (-1, -1));
+    int col = i + 1;
+    gd->setPiece(-1, -1, 6, col, "P", false, std::pair<int, int> (-1, -1));
+    gd->setPiece(-1, -1, 1, col, "p", false, std::pair<int, int> (-1, -1));
   }
   p2->getRooks().push_back(std::pair<int,int>(0, 1));
   p2->getRooks().push_back(std::pair<int,int>(0, 7));
