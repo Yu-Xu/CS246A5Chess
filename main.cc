@@ -61,13 +61,20 @@ int main(int argc, char *argv[]) {
         }
         cout << game;
       }  else if (cmd == "move") {
-        // if(turn == 1 && !h1) {
-        //   // game.computerMove(turn);
-        // }
-        // if(turn == 0 && !h2) {
-        //   game.computerMove(turn);
-        // }
-        if((turn == 1 && h1) || (turn == 0 && h2)) {
+        if(turn == 1 && !h1) {
+          // game.computerMove(turn);
+          std::cout << "Here goes nothing.." << std::endl;
+          std::cout << "Name is: " << game.getPlayer1().getPlayerName() << std::endl;
+          game.getPlayer1().makeAMove();
+          //Delete next three lines
+          int temp;
+          std::cout << "Freeeze:";
+          std::cin >> temp;
+        }
+        else if(turn == 0 && !h2) {
+          //game.computerMove(turn);
+        }
+        else if((turn == 1 && h1) || (turn == 0 && h2)) {
           string from;
           string dest;
           cin >> from >> dest;

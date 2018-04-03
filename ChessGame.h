@@ -6,6 +6,8 @@
 #include <cmath>
 #include "ChessBoard.h"
 #include "player.h"
+#include "human.h"
+#include "firstLevel.h"
 
 class ChessGame {
   ChessBoard theBoard;
@@ -22,6 +24,9 @@ class ChessGame {
   bool setUp(std::string command, std::string coordinate, std::string t);
   void setUpOb();
   void updateOb(int row, int col);
+
+  Player getPlayer1();
+  Player getPlayer2();
 
   //update pieces in the player
   bool move(bool player, int r, int c, int row, int col);

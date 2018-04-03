@@ -1,7 +1,9 @@
 #include "ChessGame.h"
 
-ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {
-}
+ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {}
+
+// ChessGame::ChessGame(): theBoard{ChessBoard{}}, p1{true}, p2{false} {
+// }
 
 ChessGame::~ChessGame() {}
 
@@ -18,32 +20,69 @@ std::pair<int, int> ChessGame::getLocation(std::string location) {
 void ChessGame::startGame(std::string player1, std::string player2) {
   theBoard.init();
   int len = 8;
-  this->p1.setPlayer(player1);
-  this->p2.setPlayer(player2);
-  if (player1 != "human") {
-    char c = player1[8];
+  if(player1 == "human")
+  {
+  	p1 = Human{1};
+  }
+  else
+  {
+  	std::cout << "In startGame as a computer player1" << std::endl;
+  	char c = player1[8];
     if (c == '1') {
-      this->p1.setLevel(1);
+    	std::cout << "c == 1" << std::endl;
+      	p1 = FirstLevel{"Fake Player", 1};
     } else if (c == '2') {
-      this->p1.setLevel(2);
+      //p1 = secondLevel{1};
     } else if (c == '3') {
-      this->p1.setLevel(3);
+      //p1 = thirdLevel{1};
     } else if (c == '4') {
-      this->p1.setLevel(4);
+     //p1 = forthLevel{1};
     }
   }
-  if (player2 != "human") {
-    char c = player2[8];
+  //this->p1.setPlayer(player1);
+
+  if(player2 == "human")
+  {
+  	p2 = Human{0};
+  }
+  else
+  {
+  	char c = player1[8];
     if (c == '1') {
-      this->p2.setLevel(1);
+      p2 = FirstLevel{"Computer fake", 0};
     } else if (c == '2') {
-      this->p2.setLevel(2);
+      //p2 = secondLevel{0};
     } else if (c == '3') {
-      this->p2.setLevel(3);
+      //p2 = thirdLevel{0};
     } else if (c == '4') {
-      this->p2.setLevel(4);
+      //p2 = forthLevel{0};
     }
   }
+  //this->p2.setPlayer(player2);
+  // if (player1 != "human") {
+  //   char c = player1[8];
+  //   if (c == '1') {
+  //     this->p1.setLevel(1);
+  //   } else if (c == '2') {
+  //     this->p1.setLevel(2);
+  //   } else if (c == '3') {
+  //     this->p1.setLevel(3);
+  //   } else if (c == '4') {
+  //     this->p1.setLevel(4);
+  //   }
+  // }
+  // if (player2 != "human") {
+  //   char c = player2[8];
+  //   if (c == '1') {
+  //     this->p2.setLevel(1);
+  //   } else if (c == '2') {
+  //     this->p2.setLevel(2);
+  //   } else if (c == '3') {
+  //     this->p2.setLevel(3);
+  //   } else if (c == '4') {
+  //     this->p2.setLevel(4);
+  //   }
+  // }
   // player owns 16 pieces
   p1.getRooks().push_back(std::pair<int,int>(7, 0));
   p1.getRooks().push_back(std::pair<int,int>(7, 7));
@@ -241,4 +280,12 @@ bool ChessGame::move(bool player, int r, int c, int row, int col) {
 std::ostream &operator<<(std::ostream &out, const ChessGame &g) {
   out << g.theBoard;
   return out;
+}
+
+Player ChessGame::getPlayer1(){
+	return this->p1;
+}
+
+Player ChessGame::getPlayer2(){
+	return this->p2;
 }
