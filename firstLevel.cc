@@ -60,7 +60,15 @@ std::pair< std::pair< int, int >, std::pair< int, int > > FirstLevel::calculateN
 					//std::cout << "toMoveFrom in pawn is " << toMoveFrom.first << ", " << toMoveFrom.second << std::endl;
 					std::uniform_int_distribution<std::mt19937::result_type> dist2(1,2);
 					int newRandomNum = dist2(rng); //Choose how many squares to move
-					toMoveTo = std::pair<int, int>(toMoveFrom.first, toMoveFrom.second + newRandomNum);
+					if(getColour() == 1)
+					{
+						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second);
+
+					}
+					else
+					{
+						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second);
+					}
 					return std::pair< std::pair< int, int>, std::pair< int, int> >(toMoveFrom, toMoveTo);
 				}
 				break;
@@ -79,19 +87,19 @@ std::pair< std::pair< int, int >, std::pair< int, int > > FirstLevel::calculateN
 					int randomDirection = dist4(rng); //Choose a direction
 					if(randomDirection == 1) //Up
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first, toMoveFrom.second + newRandomNum);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second);
 					}
 					else if(randomDirection == 2) //Right
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first, toMoveFrom.second + newRandomNum);
 					}
 					else if(randomDirection == 3) //Down
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first, toMoveFrom.second - newRandomNum);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second);
 					}
-					else if(randomDirection == 4)
+					else if(randomDirection == 4) //Left
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first, toMoveFrom.second - newRandomNum);
 					}
 					return std::pair< std::pair< int, int>, std::pair< int, int> >(toMoveFrom, toMoveTo);
 				}
@@ -111,19 +119,19 @@ std::pair< std::pair< int, int >, std::pair< int, int > > FirstLevel::calculateN
 					int randomDirection = dist4(rng); //Choose a direction
 					if(randomDirection == 1) //Up-Right
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second + newRandomNum);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second + newRandomNum);
 					}
 					else if(randomDirection == 2) //Down-Right
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second - newRandomNum);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second + newRandomNum);
 					}
 					else if(randomDirection == 3) //Down-Left
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second - newRandomNum);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first + newRandomNum, toMoveFrom.second - newRandomNum);
 					}
 					else if(randomDirection == 4) //Up-Left
 					{
-						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second + newRandomNum);
+						toMoveTo = std::pair<int, int>(toMoveFrom.first - newRandomNum, toMoveFrom.second - newRandomNum);
 					}
 					return std::pair< std::pair< int, int>, std::pair< int, int> >(toMoveFrom, toMoveTo);
 				}

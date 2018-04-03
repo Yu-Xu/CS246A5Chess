@@ -343,20 +343,20 @@ bool ChessBoard::move(bool player, int r, int c, int row, int col, std::string t
   } else if (type == "N" || type == "n") { //if target is a knight
 
     if (moveKnight(r, c, row, col)) {
-      std::cout << "correct?? row: " << row << ", col: " << col << std::endl;
+      std::cout << "correct?? r: " << r << ", c: " << c << std::endl;
       if (board[row][col].getPiece() != nullptr) {
-
+        std::cout << "A" << std::endl;
         board[row][col].attackPiece(type, colour);
         updateOb(r, c, row, col);
         board[r][c].clearPiece();
-        std::cout << "A" << std::endl;
+        
         return true;
       } else {
-
+        std::cout << "NOT A" << std::endl;
         board[row][col].setPiece(type, colour);
         updateOb(r, c, row, col);
         board[r][c].clearPiece();
-        std::cout << "NOT A" << std::endl;
+        
         return true;
       }
     }
