@@ -8,11 +8,10 @@
 #include "rook.h"
 #include <string>
 
-Cell::Cell(): r{0}, c{0}, colour{0}, p{nullptr} {}
+Cell::Cell(): r{0}, c{0}, colour{0},
+  p{std::make_unique<Piece>(nullptr)} {}
 
-Cell::~Cell() {
-  delete p;
-}
+Cell::~Cell() {}
 
 void Cell::setCell(int r,int c,bool colour) {
   this->r = r;
@@ -20,8 +19,8 @@ void Cell::setCell(int r,int c,bool colour) {
   this->colour = colour;
 }
 
-Piece *&Cell::getPiece() {
-  return p;
+Piece* Cell::getPiece() {
+  return p.get();
 }
 
 bool Cell::getColour() {
@@ -29,8 +28,7 @@ bool Cell::getColour() {
 }
 
 void Cell::clearPiece() {
-  delete p;
-  p = nullptr;
+  p.reset();
 }
 
 void Cell::setPiece(std::string s, bool colour) {
@@ -38,34 +36,33 @@ void Cell::setPiece(std::string s, bool colour) {
     return;
   }
   if (s == "q" || s == "Q") {
-    p = new Queen{s, colour, r, c};
+    p = make_unique<Queen>(s, colour, r, c);
   } else if (s == "k" || s == "K") {
-    p = new King{s, colour, r, c};
+    p = make_unique<King>(s, colour, r, c);
   } else if (s == "n" || s == "N") {
-    p = new Knight{s, colour, r, c};
+    p = make_unique<Knight>(s, colour, r, c);
   } else if (s == "r" || s == "R") {
-    p = new Rook{s, colour, r, c};
+    p = make_unique<Rook>(s, colour, r, c);
   } else if (s == "b" || s == "B") {
-    p = new Bishop{s, colour, r, c};
+    p = make_unique<Bishop>(s, colour, r, c);
   } else if (s == "P" || s == "p") {
-    p = new Pawn{s, colour, r, c};
+    p = make_unique<Pawn>(s, colour, r, c);
   }
 }
 
 void Cell::attackPiece(std::string s, bool colour) {
-  delete p;
   if (s == "q" || s == "Q") {
-    p = new Queen{s, colour, r, c};
+    p = make_unique<Queen>(s, colour, r, c);
   } else if (s == "k" || s == "K") {
-    p = new King{s, colour, r, c};
+    p = make_unique<King>(s, colour, r, c);
   } else if (s == "n" || s == "N") {
-    p = new Knight{s, colour, r, c};
+    p = make_unique<Knight>(s, colour, r, c);
   } else if (s == "r" || s == "R") {
-    p = new Rook{s, colour, r, c};
+    p = make_unique<Rook>(s, colour, r, c);
   } else if (s == "b" || s == "B") {
-    p = new Bishop{s, colour, r, c};
+    p = make_unique<Bishop>(s, colour, r, c);
   } else {
-    p = new Pawn{s, colour, r, c};
+    p = make_unique<Pawn>(s, colour, r, c);
   }
 }
 

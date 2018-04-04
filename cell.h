@@ -6,14 +6,14 @@
 class Cell {
   int r, c;
   bool colour;
-  Piece *p;
+  std::unique_ptr<Piece> p;
 
  public:
   Cell();
   ~Cell();
 
   void setCell(int r,int c,bool colour);
-  Piece *&getPiece();
+  Piece *getPiece();
   bool getColour();
   void clearPiece();
 

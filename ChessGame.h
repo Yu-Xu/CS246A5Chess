@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <cmath>
+#include <memory>
 #include "ChessBoard.h"
 #include "GraphicsDisplay.h"
 #include "player.h"
@@ -13,9 +14,9 @@
 
 class ChessGame {
   ChessBoard theBoard;
-  GraphicsDisplay *gd;
-  Player *p1;
-  Player *p2;
+  std::unique_ptr<GraphicsDisplay> gd;
+  std::unique_ptr<Player> p1;
+  std::unique_ptr<Player> p2;
 
  public:
   ChessGame(Xwindow &xw);

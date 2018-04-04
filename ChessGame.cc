@@ -1,12 +1,12 @@
 #include "ChessGame.h"
 
-ChessGame::ChessGame(Xwindow &xw): theBoard{ChessBoard{}}, gd{new GraphicsDisplay{xw}}, p1{nullptr}, p2{nullptr} {
-}
+ChessGame::ChessGame(Xwindow &xw):
+  theBoard{ChessBoard{}}, gd{std::make_unique<GraphicsDisplay>(xw)},
+  p1{std::make_unique<Player>(nullptr)},
+  p2{std::make_unique<Player>(nullptr)} {}
 
 ChessGame::~ChessGame() {
-  delete p1;
-  delete p2;
-  delete gd;
+
 }
 
 std::pair<int, int> ChessGame::getLocation(std::string location) {
@@ -21,8 +21,8 @@ std::pair<int, int> ChessGame::getLocation(std::string location) {
 
 void ChessGame::setPlayer(std::string player1, std::string player2) {
   if (player1 != "human") {
-    delete p1;
-    p1 = new Computer{true, player1};
+    p1 = make_unique<Computer>(true, player1);
+
     char c = player1[8];
     if (c == '1') {
       this->p1->setLevel("1");
@@ -34,10 +34,11 @@ void ChessGame::setPlayer(std::string player1, std::string player2) {
       this->p1->setLevel("4");
     }
   } else {
-    p1 = new Human{true, player1};
+    p1 = make_unique<Human>(true, player1);
   }
   if (player2 != "human") {
-    p2 = new Computer{false, player2};
+    p2 = make_unique<Computer>(false, player2);
+
     char c = player2[8];
     if (c == '1') {
       this->p2->setLevel("1");
@@ -49,7 +50,7 @@ void ChessGame::setPlayer(std::string player1, std::string player2) {
       this->p2->setLevel("4");
     }
   } else {
-    p2 = new Human{false, player1};
+    p2 = make_unique<Human>(false, player2);
   }
 }
 
@@ -102,17 +103,11 @@ void ChessGame::startGame() {
 }
 
 void ChessGame::endGame(Xwindow &xw) {
-  delete p1;
-  delete p2;
-  delete gd;
-  p1 = nullptr;
-  p2 = nullptr;
-  gd = new GraphicsDisplay{xw};
   theBoard.clearBoard();
 }
 
 void ChessGame::add(bool player, std::string type, int row, int col) {
-  Player *p = player ? p1: p2;
+  std::unique_ptr<Player> p = player ? p1.get(): p2.get();
   std::pair<int, int> k = std::pair<int, int>(row, col);
   if (type == "P" || type == "p") {
     p->getPawns().push_back(k);
@@ -127,11 +122,12 @@ void ChessGame::add(bool player, std::string type, int row, int col) {
   } else if (type == "K" || type == "k") {
     p->getKing().push_back(k);
   }
+  p = nullptr;
 }
 
 // used for updatePlayer
 void ChessGame::remove(bool player, std::string type, int r, int c) {
-  Player *p = player ? p1: p2;
+  std::unique_ptr<Player> p = player ? p1.get(): p2.get();
   int len = 0;
   if (type == "P" || type == "p") {
     len = p->getPawns().size();
@@ -176,6 +172,7 @@ void ChessGame::remove(bool player, std::string type, int r, int c) {
       }
     }
   }
+  p = nullptr;
 } //
 
 void ChessGame::addPiece() {
@@ -261,6 +258,7 @@ bool ChessGame::Promotion(bool player, int r, int c, int row, std::string t) {
 }
 
 bool ChessGame::move(bool player, int r, int c, int row, int col, std::string promt) {
+
   if (r < 0 || r > 7 || c < 0 || c > 7 || row < 0 || row > 7 || col < 0 || col > 7) {
     return false;
   }
@@ -317,7 +315,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col, std::string pr
 
 // computerMove
 void ChessGame::computerMove(bool player) {
-  Player *p = player ? p1: p2;
+  std::unique_ptr<Player> p = player ? p1.get(): p2.get();
   std::string level = p->getLevel();
   std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> range = theBoard.computerMove(player, level);
   int size = range.size();
@@ -349,6 +347,7 @@ void ChessGame::computerMove(bool player) {
     }
     --times;
   }
+  p = nullptr;
 }
 
 // update the GraphicsDisplay of the board
