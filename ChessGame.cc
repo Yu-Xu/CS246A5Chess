@@ -1,4 +1,5 @@
 #include "ChessGame.h"
+#include <memory>
 
 ChessGame::ChessGame(Xwindow &xw):
   theBoard{ChessBoard{}}, gd{std::make_unique<GraphicsDisplay>(xw)},
@@ -179,8 +180,8 @@ void ChessGame::addPiece() {
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 8; j++) {
       if(theBoard.getBoard()[i][j].getPiece() != nullptr) {
-        bool colour = theBoard.getBoard()[i][j].getPiece()->colour;
-        std::string type = theBoard.getBoard()[i][j].getPiece()->type;
+        bool colour = theBoard.getBoard()[i][j].getPiece()->getColour();
+        std::string type = theBoard.getBoard()[i][j].getPiece()->getType();
         this->add(colour, type, i, j);
       }
     }
@@ -248,7 +249,7 @@ bool ChessGame::checkMate(bool player) {
 }
 
 bool ChessGame::Promotion(bool player, int r, int c, int row, std::string t) {
-  std::string type = theBoard.getBoard()[r][c].getPiece()->type;
+  std::string type = theBoard.getBoard()[r][c].getPiece()->getType();
   if (t == "K" || t == "k" || t == "P" || t == "p") {
     return false;
   }
@@ -265,7 +266,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col, std::string pr
   if (theBoard.getBoard()[r][c].getPiece() == nullptr || (row == r && col == c)) {
     return false;
   }
-  if (theBoard.getBoard()[r][c].getPiece()->colour != player) {
+  if (theBoard.getBoard()[r][c].getPiece()->getColour() != player) {
     return false;
   }
   if (promt != "") {
@@ -273,10 +274,10 @@ bool ChessGame::move(bool player, int r, int c, int row, int col, std::string pr
       return false;
     }
   }
-  std::string t1 = theBoard.getBoard()[r][c].getPiece()->type;
+  std::string t1 = theBoard.getBoard()[r][c].getPiece()->getType();
   std::string t2 = "";
   if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
-    t2 = theBoard.getBoard()[row][col].getPiece()->type;
+    t2 = theBoard.getBoard()[row][col].getPiece()->getType();
   }
   bool result = theBoard.move(player, r, c, row, col);
   if (result == true) {
@@ -355,7 +356,7 @@ void ChessGame::updateBoard(int r, int c, int row, int col, std::string t2, bool
   int hdist = col - c;
   int vdist = row - r;
   bool passant = false;
-  std::string type = theBoard.getBoard()[row][col].getPiece()->type;
+  std::string type = theBoard.getBoard()[row][col].getPiece()->getType();
   std::pair<int, int> rook = std::pair<int, int>(-1, -1);
   if (t2 == "") {
     if (type == "P" || type == "p") {

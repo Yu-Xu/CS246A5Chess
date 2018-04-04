@@ -1,6 +1,7 @@
 #ifndef CELL_H
 #define CELL_H
 #include <iostream>
+#include <memory>
 #include "piece.h"
 
 class Cell {

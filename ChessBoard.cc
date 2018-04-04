@@ -1,4 +1,5 @@
 #include "ChessBoard.h"
+#include <memory>
 
 ChessBoard::ChessBoard(): board{}, size{8} {
   for(int i = 0; i < size; ++i) {
@@ -61,7 +62,7 @@ bool ChessBoard::checkBoard() {
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
       if (board[i][j].getPiece() != nullptr) {
-        std::string type = board[i][j].getPiece()->type;
+        std::string type = board[i][j].getPiece()->getType();
         if (type == "K") {
           ++wKing;
           wIncheck = incheck(true, i, j);
@@ -132,8 +133,8 @@ std::pair<int, int> ChessBoard::findKing(bool colour) {
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
       if (board[i][j].getPiece() != nullptr) {
-        std::string type = board[i][j].getPiece()->type;
-        bool color = board[i][j].getPiece()->colour;
+        std::string type = board[i][j].getPiece()->getType();
+        bool color = board[i][j].getPiece()->getColour();
         if ((type == "K" || type == "k") && (color == colour)) {
           return  std::pair<int, int>(i, j);
         }
@@ -147,8 +148,8 @@ bool ChessBoard::staleMate() {
   for (int i = 0; i < size; i++) {
     for (int j = 0; j < size; j++) {
       if (board[i][j].getPiece() != nullptr) {
-        std::string type = board[i][j].getPiece()->type;
-        bool player = board[i][j].getPiece()->colour;
+        std::string type = board[i][j].getPiece()->getType();
+        bool player = board[i][j].getPiece()->getColour();
         std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> range = computerL1(player);
         if (range.size() > 0) { // there is piece in the board still has legal move
           return false;
@@ -191,9 +192,9 @@ bool ChessBoard::incheck(bool player, int row, int col) {
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
       if (board[i][j].getPiece() != nullptr) {
-        bool colour = board[i][j].getPiece()->colour;
+        bool colour = board[i][j].getPiece()->getColour();
         if (colour == opponent) {
-          std::string type = board[i][j].getPiece()->type;
+          std::string type = board[i][j].getPiece()->getType();
           bool incheck = legalMove(i, j, row, col, type, opponent);
           if (incheck == true){
             return true; //destination will be in check
@@ -232,13 +233,13 @@ bool ChessBoard::move(bool player, int r, int c, int row, int col) {
   if (board[r][c].getPiece() == nullptr) {
     return false;
   }
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   if (type == "Q" || type == "q" || type == "R" || type == "r" || type == "B" || type == "b") {
     if (movePiece(player, r, c, row, col) ==  true) {
       if (board[row][col].getPiece() != nullptr
-      && board[row][col].getPiece()->type != "k" && board[row][col].getPiece()->type != "K") {
-        if (colour == board[row][col].getPiece()->colour) {
+      && board[row][col].getPiece()->getType() != "k" && board[row][col].getPiece()->getType() != "K") {
+        if (colour == board[row][col].getPiece()->getColour()) {
           return false;
         }
         board[row][col].attackPiece(type, colour);
@@ -260,8 +261,8 @@ bool ChessBoard::move(bool player, int r, int c, int row, int col) {
   } else if (type == "N" || type == "n") {
     if(moveKnight(player, r, c, row, col)) {
       if (board[row][col].getPiece() != nullptr
-          && board[row][col].getPiece()->type != "k" && board[row][col].getPiece()->type != "K") {
-        if (colour == board[row][col].getPiece()->colour) {
+          && board[row][col].getPiece()->getType() != "k" && board[row][col].getPiece()->getType() != "K") {
+        if (colour == board[row][col].getPiece()->getColour()) {
           return false;
         }
         board[row][col].attackPiece(type, colour);
@@ -320,7 +321,7 @@ bool ChessBoard::moveDown(int r, int c, int row) {
 // this method moves three type piece, queen, bishop, rook
 bool ChessBoard::movePiece(bool player, int r, int c, int row, int col) {
   if (board[r][c].getPiece()->legalMove(player, row, col)) {
-    std::string type = board[r][c].getPiece()->type;
+    std::string type = board[r][c].getPiece()->getType();
     int hdist = col - c;
     int vdist = row - r;
     if (row == r && (type == "Q" || type == "q" || type == "R" || type == "r")) {
@@ -379,19 +380,19 @@ bool ChessBoard::movePawn(bool player, int r, int c, int row, int col) {
     vdist = row - r;
   }
   if (board[r][c].getPiece()->legalMove(player, row, col)) {
-    std::string type = board[r][c].getPiece()->type;
-    bool colour = board[r][c].getPiece()->colour;
+    std::string type = board[r][c].getPiece()->getType();
+    bool colour = board[r][c].getPiece()->getColour();
     if ((hdist == 1 || hdist == -1) && vdist == 1) { //capture
       if (board[row][col].getPiece() != nullptr
-      && colour != board[row][col].getPiece()->colour) { // normal capture
-        if (board[row][col].getPiece()->type != "k" && board[row][col].getPiece()->type != "K") {
+      && colour != board[row][col].getPiece()->getColour()) { // normal capture
+        if (board[row][col].getPiece()->getType() != "k" && board[row][col].getPiece()->getType() != "K") {
           board[row][col].attackPiece(type, colour);
           board[r][c].clearPiece();
         }
         return true;
       } else if (board[r][col].getPiece() != nullptr
         && board[row][col].getPiece() == nullptr
-        && colour != board[r][col].getPiece()->colour) { // en passant
+        && colour != board[r][col].getPiece()->getColour()) { // en passant
         int passant = board[r][col].getPiece()->getPassant();
         if (passant == 1) {
           board[row][col].setPiece(type, colour);
@@ -434,8 +435,8 @@ std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, i
   for(int i = 0; i < size; ++i) {
     for(int j = 0; j < size; ++j) {
       if (board[i][j].getPiece() != nullptr) {
-        std::string type = board[i][j].getPiece()->type;
-        bool color = board[i][j].getPiece()->colour;
+        std::string type = board[i][j].getPiece()->getType();
+        bool color = board[i][j].getPiece()->getColour();
         if ((type == "R" || type == "r") && (color == colour)) {
           int hdist = j - col;
           int vdist = i - row;
@@ -461,8 +462,8 @@ std::pair<int, int> ChessBoard::findRook(bool colour, int row, int col, int h, i
 }
 
 bool ChessBoard::kingRight(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rcol = k.second;
   for (int i = c; i < rcol; i++) {
     if (i <= col && i > c) {
@@ -474,8 +475,8 @@ bool ChessBoard::kingRight(int r, int c, int row, int col, std::pair<int, int> k
       return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row][col - 1].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -484,8 +485,8 @@ bool ChessBoard::kingRight(int r, int c, int row, int col, std::pair<int, int> k
 }
 
 bool ChessBoard::kingLeft(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rcol = k.second;
   for (int i = c; i > rcol; i--) {
     if (i >= col && i < c) {
@@ -497,8 +498,8 @@ bool ChessBoard::kingLeft(int r, int c, int row, int col, std::pair<int, int> k,
       return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row][col + 1].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -507,8 +508,8 @@ bool ChessBoard::kingLeft(int r, int c, int row, int col, std::pair<int, int> k,
 }
 
 bool ChessBoard::kingDown(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rrow = k.first;
   for (int i = r; i <= rrow; i++) {
     if (i <= row && i > r) {
@@ -520,8 +521,8 @@ bool ChessBoard::kingDown(int r, int c, int row, int col, std::pair<int, int> k,
         return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row - 1][col].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -530,8 +531,8 @@ bool ChessBoard::kingDown(int r, int c, int row, int col, std::pair<int, int> k,
 }
 
 bool ChessBoard::kingUp(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rrow = k.first;
   for (int i = r; i >= rrow; i--) {
     if (i >= row && i < r) {
@@ -543,8 +544,8 @@ bool ChessBoard::kingUp(int r, int c, int row, int col, std::pair<int, int> k, b
         return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row + 1][col].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -553,8 +554,8 @@ bool ChessBoard::kingUp(int r, int c, int row, int col, std::pair<int, int> k, b
 }
 
 bool ChessBoard::kingRightDown(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rrow = k.first;
   int rcol = k.second;
   for (int i = r, j = c; i <= rrow &&  j <= rcol; i++, j++) {
@@ -567,8 +568,8 @@ bool ChessBoard::kingRightDown(int r, int c, int row, int col, std::pair<int, in
         return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row - 1][col - 1].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -577,8 +578,8 @@ bool ChessBoard::kingRightDown(int r, int c, int row, int col, std::pair<int, in
 }
 
 bool ChessBoard::kingLeftDown(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rrow = k.first;
   int rcol = k.second;
   for (int i = r, j = c; i <= rrow &&  j >= rcol; i++, j--) { // moves left down
@@ -591,8 +592,8 @@ bool ChessBoard::kingLeftDown(int r, int c, int row, int col, std::pair<int, int
         return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row - 1][col + 1].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -601,8 +602,8 @@ bool ChessBoard::kingLeftDown(int r, int c, int row, int col, std::pair<int, int
 }
 
 bool ChessBoard::kingRightUp(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rrow = k.first;
   int rcol = k.second;
   for (int i = r, j = c; i >= rrow &&  j <= rcol; i--, j++) { // moves up right
@@ -615,8 +616,8 @@ bool ChessBoard::kingRightUp(int r, int c, int row, int col, std::pair<int, int>
         return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row + 1][col - 1].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -625,8 +626,8 @@ bool ChessBoard::kingRightUp(int r, int c, int row, int col, std::pair<int, int>
 }
 
 bool ChessBoard::kingLeftUp(int r, int c, int row, int col, std::pair<int, int> k, bool player) {
-  std::string type = board[r][c].getPiece()->type;
-  bool colour = board[r][c].getPiece()->colour;
+  std::string type = board[r][c].getPiece()->getType();
+  bool colour = board[r][c].getPiece()->getColour();
   int rrow = k.first;
   int rcol = k.second;
   for (int i = r, j = c; i >= rrow &&  j >= rcol; i--, j--) {
@@ -639,8 +640,8 @@ bool ChessBoard::kingLeftUp(int r, int c, int row, int col, std::pair<int, int> 
         return false;
     }
   }
-  std::string rtype = board[k.first][k.second].getPiece()->type;
-  bool rcolour = board[k.first][k.second].getPiece()->colour;
+  std::string rtype = board[k.first][k.second].getPiece()->getType();
+  bool rcolour = board[k.first][k.second].getPiece()->getColour();
   board[row + 1][col + 1].setPiece(rtype, rcolour);
   board[row][col].setPiece(type, colour);
   board[k.first][k.second].clearPiece();
@@ -650,8 +651,8 @@ bool ChessBoard::kingLeftUp(int r, int c, int row, int col, std::pair<int, int> 
 
 bool ChessBoard::moveKing(bool player, int r, int c, int row, int col) {
   if (board[r][c].getPiece()->legalMove(player, row, col)) {
-    std::string type = board[r][c].getPiece()->type;
-    bool colour = board[r][c].getPiece()->colour;
+    std::string type = board[r][c].getPiece()->getType();
+    bool colour = board[r][c].getPiece()->getColour();
     int hdist = col - c;
     int vdist = row - r;
     if (((vdist == 0)&&(hdist == 2 || hdist == -2)) ||
@@ -716,7 +717,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int i = r - 1;  // starts at the cell up this piece
       while (i >= 0) {  // track along until the boundary of the board
         if (board[i][c].getPiece() != nullptr) { // if along the path there is a piece in one cell
-          if (board[i][c].getPiece()->colour != player) { // if the piece belongs to my opponet push to v
+          if (board[i][c].getPiece()->getColour() != player) { // if the piece belongs to my opponet push to v
             v.push_back(std::pair<int, int>(i, c));
           }
           break; // cannot jump a piece
@@ -729,7 +730,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int i = r + 1;
       while (i <= 7) {
         if (board[i][c].getPiece() != nullptr) {
-          if (board[i][c].getPiece()->colour == player) {
+          if (board[i][c].getPiece()->getColour() == player) {
             v.push_back(std::pair<int, int>(i, c));
           }
           break;
@@ -742,7 +743,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int i = c - 1;
       while (i >= 0) {
         if (board[r][i].getPiece() != nullptr) {
-          if (board[r][i].getPiece()->colour == player) {
+          if (board[r][i].getPiece()->getColour() == player) {
             v.push_back(std::pair<int, int>(r, i));
           }
           break;
@@ -755,7 +756,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int i = c + 1;
       while (i <= 7) {
         if (board[r][i].getPiece() != nullptr) {
-          if (board[r][i].getPiece()->colour == player) {
+          if (board[r][i].getPiece()->getColour() == player) {
             v.push_back(std::pair<int, int>(r, i));
           }
           break;
@@ -773,7 +774,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int j = c - 1;
       while (i >= 0 && j >= 0) {
         if (board[i][j].getPiece() != nullptr) {
-          if (board[i][j].getPiece()->colour != player) {
+          if (board[i][j].getPiece()->getColour() != player) {
             v.push_back(std::pair<int, int>(i, j));
           }
           break;
@@ -789,7 +790,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int j = c + 1;
       while (i >= 0 && j <= 7) {
         if (board[i][j].getPiece() != nullptr) {
-          if (board[i][j].getPiece()->colour != player) {
+          if (board[i][j].getPiece()->getColour() != player) {
             v.push_back(std::pair<int, int>(i, j));
           }
           break;
@@ -805,7 +806,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int j = c - 1;
       while (i <= 7 && j >= 0) {
         if (board[i][j].getPiece() != nullptr) {
-          if (board[i][j].getPiece()->colour != player) {
+          if (board[i][j].getPiece()->getColour() != player) {
             v.push_back(std::pair<int, int>(i, j));
           }
           break;
@@ -821,7 +822,7 @@ std::vector<std::pair<int, int>> ChessBoard::legal(int r, int c, std::string typ
       int j = c + 1;
       while (i <= 7 && j <= 7) {
         if (board[i][j].getPiece() != nullptr) {
-          if (board[i][j].getPiece()->colour != player) {
+          if (board[i][j].getPiece()->getColour() != player) {
             v.push_back(std::pair<int, int>(i, j));
           }
           break;
@@ -973,10 +974,10 @@ std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> ChessBoard::comp
         int col = it.second[j].second;
         int r = it.first.first;
         int c = it.first.second;
-        std::string type = board[r][c].getPiece()->type;
+        std::string type = board[r][c].getPiece()->getType();
         // bool check = this->check(player, row, col, type);
         bool incheck = this->incheck(player, row, col);
-        if (board[row][col].getPiece() != nullptr && board[row][col].getPiece()->colour != player) {
+        if (board[row][col].getPiece() != nullptr && board[row][col].getPiece()->getColour() != player) {
           if (type == "P" && type == "p") {
             int hdist = row - r;
             if (hdist == -1 || hdist == 1) moves.push_back(it.second[j]);
@@ -1008,8 +1009,8 @@ std::map<std::pair<int, int>, std::vector<std::pair<int, int>>>ChessBoard::compu
         int col = it.second[j].second;
         int r = it.first.first;
         int c = it.first.second;
-        std::string type = board[r][c].getPiece()->type;
-        if (board[row][col].getPiece() != nullptr && board[row][col].getPiece()->colour != player) {
+        std::string type = board[r][c].getPiece()->getType();
+        if (board[row][col].getPiece() != nullptr && board[row][col].getPiece()->getColour() != player) {
           if (type == "P" && type == "p") {
             int hdist = row - r;
             if (hdist == -1 || hdist == 1) moves.push_back(it.second[j]);
@@ -1036,8 +1037,8 @@ std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> ChessBoard::comp
   std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> m;
   for (int i = 0; i < size; i++)  {
     for (int j = 0; j < size; j++) {
-      if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->colour == player) {
-        std::string type = board[i][j].getPiece()->type;
+      if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->getColour() == player) {
+        std::string type = board[i][j].getPiece()->getType();
         std::vector<std::pair<int, int>> range = oneLegalMove(player, i, j, type);
         if (range.size() > 0) {
           std::pair<int, int> p = std::pair<int, int>(i , j);

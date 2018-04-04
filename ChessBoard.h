@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <memory>
 #include <utility>
 #include "cell.h"
 #include <string>

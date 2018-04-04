@@ -7,6 +7,7 @@
 #include "bishop.h"
 #include "rook.h"
 #include <string>
+#include <memory>
 
 Cell::Cell(): r{0}, c{0}, colour{0},
   p{std::make_unique<Piece>(nullptr)} {}
@@ -36,39 +37,39 @@ void Cell::setPiece(std::string s, bool colour) {
     return;
   }
   if (s == "q" || s == "Q") {
-    p = make_unique<Queen>(s, colour, r, c);
+    p = std::make_unique<Queen>(s, colour, r, c);
   } else if (s == "k" || s == "K") {
-    p = make_unique<King>(s, colour, r, c);
+    p = std::make_unique<King>(s, colour, r, c);
   } else if (s == "n" || s == "N") {
-    p = make_unique<Knight>(s, colour, r, c);
+    p = std::make_unique<Knight>(s, colour, r, c);
   } else if (s == "r" || s == "R") {
-    p = make_unique<Rook>(s, colour, r, c);
+    p = std::make_unique<Rook>(s, colour, r, c);
   } else if (s == "b" || s == "B") {
-    p = make_unique<Bishop>(s, colour, r, c);
+    p = std::make_unique<Bishop>(s, colour, r, c);
   } else if (s == "P" || s == "p") {
-    p = make_unique<Pawn>(s, colour, r, c);
+    p = std::make_unique<Pawn>(s, colour, r, c);
   }
 }
 
 void Cell::attackPiece(std::string s, bool colour) {
   if (s == "q" || s == "Q") {
-    p = make_unique<Queen>(s, colour, r, c);
+    p = std::make_unique<Queen>(s, colour, r, c);
   } else if (s == "k" || s == "K") {
-    p = make_unique<King>(s, colour, r, c);
+    p = std::make_unique<King>(s, colour, r, c);
   } else if (s == "n" || s == "N") {
-    p = make_unique<Knight>(s, colour, r, c);
+    p = std::make_unique<Knight>(s, colour, r, c);
   } else if (s == "r" || s == "R") {
-    p = make_unique<Rook>(s, colour, r, c);
+    p = std::make_unique<Rook>(s, colour, r, c);
   } else if (s == "b" || s == "B") {
-    p = make_unique<Bishop>(s, colour, r, c);
+    p = std::make_unique<Bishop>(s, colour, r, c);
   } else {
-    p = make_unique<Pawn>(s, colour, r, c);
+    p = std::make_unique<Pawn>(s, colour, r, c);
   }
 }
 
 std::ostream &operator<<(std::ostream &out, const Cell &c) {
   if (c.p != nullptr) {
-    out << c.p->type;
+    out << c.p->getType();
   } else {
     if (c.colour == 1) {
       out << " ";
