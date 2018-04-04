@@ -14,8 +14,8 @@ class Xwindow {
  public:
   Xwindow(int width=500, int height=500);  // Constructor; displays the window.
   ~Xwindow();                              // Destructor; destroys the window.
-  Xwindow(const Xwindow&) = delete;
-  Xwindow &operator=(const Xwindow&) = delete;
+  Xwindow(const Xwindow&);
+  Xwindow &operator=(const Xwindow&);
 
   enum {White=0, Black, Red, Green, Blue}; // Available colours.
 
