@@ -1,19 +1,20 @@
 #ifndef CELL_H
 #define CELL_H
 #include <iostream>
+#include <memory>
 #include "piece.h"
 
 class Cell {
   int r, c;
   bool colour;
-  Piece *p;
+  std::shared_ptr<Piece> p;
 
  public:
   Cell();
   ~Cell();
 
   void setCell(int r,int c,bool colour);
-  Piece *&getPiece();
+  std::shared_ptr<Piece> getPiece();
   bool getColour();
   void clearPiece();
 

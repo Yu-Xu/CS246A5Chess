@@ -1,25 +1,22 @@
 #ifndef PIECE_H
 #define PIECE_H
 #include <string>
-#include "Subject.h"
-#include "observer.h"
+#include <memory>
 
-struct Piece: public Subject, public Observer  {
+struct Piece : public std::enable_shared_from_this<Piece>{
   std::string type;  // See above
   bool colour;   // What colour was the new piece?  (NOT what is my colour)
   int r, c;
   bool check;
 
   Piece(std::string t, bool colour, int row, int col);
-  ~Piece() override;
+  virtual ~Piece();
 
-  void notify(bool player, int r, int c) override;
-  virtual bool legalMove(bool player, int row, int col) = 0;;
+  virtual bool legalMove(bool player, int row, int col) = 0;
   virtual bool getPassant();
   virtual bool getFirst();
   virtual void setPassant(bool passant);
   virtual void setFirst(bool first);
-  void print() override;
 };
 
 #endif

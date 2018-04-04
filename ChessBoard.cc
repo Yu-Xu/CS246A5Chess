@@ -205,20 +205,38 @@ bool ChessBoard::incheck(bool player, int row, int col) {
   return false;
 }
 
+bool ChessBoard::saveKing(bool player, int row, int col) {
+  bool save = false;
+  for (int i = 0; i < size; i++) {
+    for (int j = 0; j < size; j++) { // check if all my pieces can capture opponet's piece around my king
+      std::string type = board[i][j].getPiece()->type;
+      save = legalMove(i, j, row, col, type, player); // if one of my piece at (i, j) can capture opponet's piece at (row, col)
+      if (save == true) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 bool ChessBoard::checkMate(bool player) {
   bool opponent = !player;
   bool checkMate = false;
   std::pair<int, int> k = findKing(opponent);
   int r = k.first;
   int c = k.second;
-  for (int i = -1; i <= 1; i ++) {
-    for (int j = -1; j <= 1; j ++) {
+  for (int i = -1; i <= 1; i++) {
+    for (int j = -1; j <= 1; j++) {
       int row = k.first + i;
       int col = k.second + j;
       if ((row != r || col != c) && row >= 0 && row <= 7 && col >= 0 && col <= 7) {
-        checkMate =  incheck(opponent, row, col);
+        checkMate = incheck(opponent, row, col);
         if (checkMate == false) { // opponent's king can escape in one move
           return false;
+        } else { // if the cell around the opponet's king can be reached by my pieces
+          if (saveKing(opponent, row, col) == true) { // see if any of opponent's pieces can save the King
+            return false;
+          }
         }
       }
     }

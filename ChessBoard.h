@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <memory>
 #include <utility>
 #include "cell.h"
 #include <string>
@@ -53,6 +54,7 @@ class ChessBoard {
   bool check(bool player, int row, int col, std::string type);
   bool incheck(bool player, int row, int col);
   bool checkMate(bool player);
+  bool saveKing(bool player, int row, int col);
   bool staleMate();
   std::pair<int, int> findKing(bool colour);
   std::pair<int, int> findRook(bool colour, int row, int col, int h, int v);

@@ -1,12 +1,11 @@
 #include "ChessGame.h"
 
-ChessGame::ChessGame(Xwindow &xw): theBoard{ChessBoard{}}, gd{new GraphicsDisplay{xw}}, p1{nullptr}, p2{nullptr} {
-}
+ChessGame::ChessGame(Xwindow &xw):
+  theBoard{ChessBoard{}}, gd{std::shared_ptr<GraphicsDisplay>(new GraphicsDisplay{xw})},
+  p1{nullptr}, p2{nullptr} {}
 
 ChessGame::~ChessGame() {
-  delete p1;
-  delete p2;
-  delete gd;
+
 }
 
 std::pair<int, int> ChessGame::getLocation(std::string location) {
@@ -21,8 +20,9 @@ std::pair<int, int> ChessGame::getLocation(std::string location) {
 
 void ChessGame::setPlayer(std::string player1, std::string player2) {
   if (player1 != "human") {
-    delete p1;
-    p1 = new Computer{true, player1};
+
+    std::shared_ptr<Player> np1{new Computer{true, player1}};
+    std::swap(p1, np1);
     char c = player1[8];
     if (c == '1') {
       this->p1->setLevel("1");
@@ -34,10 +34,12 @@ void ChessGame::setPlayer(std::string player1, std::string player2) {
       this->p1->setLevel("4");
     }
   } else {
-    p1 = new Human{true, player1};
+    std::shared_ptr<Player> np1{new Computer{true, player1}};
+    std::swap(p1, np1);
   }
   if (player2 != "human") {
-    p2 = new Computer{false, player2};
+    std::shared_ptr<Player> np2{new Computer{false, player2}};
+    std::swap(p2, np2);
     char c = player2[8];
     if (c == '1') {
       this->p2->setLevel("1");
@@ -49,7 +51,8 @@ void ChessGame::setPlayer(std::string player1, std::string player2) {
       this->p2->setLevel("4");
     }
   } else {
-    p2 = new Human{false, player1};
+    std::shared_ptr<Player> np2{new Computer{false, player2}};
+    std::swap(p2, np2);
   }
 }
 
@@ -65,27 +68,28 @@ void ChessGame::startGame() {
   p1->getQueen().push_back(std::pair<int,int>(7, 3));
   p1->getKing().push_back(std::pair<int,int>(7, 4));
   // GraphicsDisplay
-  gd->setPiece(-1, -1, 7, 0, "R", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 7, "R", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 1, "N", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 6, "N", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 2, "B", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 5, "B", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 3, "Q", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 7, 4, "K", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 1, "R", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 8, "R", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 2, "N", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 7, "N", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 3, "B", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 6, "B", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 4, "Q", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 7, 5, "K", false, std::pair<int, int> (-1, -1));
 
-  gd->setPiece(-1, -1, 0, 0, "r", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 7, "r", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 1, "n", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 6, "n", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 2, "b", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 5, "b", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 3, "q", false, std::pair<int, int> (-1, -1));
-  gd->setPiece(-1, -1, 0, 4, "k", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 1, "r", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 8, "r", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 2, "n", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 7, "n", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 3, "b", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 6, "b", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 4, "q", false, std::pair<int, int> (-1, -1));
+  gd->setPiece(-1, -1, 0, 5, "k", false, std::pair<int, int> (-1, -1));
   for (int i = 0; i < len; i++) {
     p1->getPawns().push_back(std::pair<int,int>(6, i));
-    gd->setPiece(-1, -1, 6, i, "P", false, std::pair<int, int> (-1, -1));
-    gd->setPiece(-1, -1, 1, i, "p", false, std::pair<int, int> (-1, -1));
+    int col = i + 1;
+    gd->setPiece(-1, -1, 6, col, "P", false, std::pair<int, int> (-1, -1));
+    gd->setPiece(-1, -1, 1, col, "p", false, std::pair<int, int> (-1, -1));
   }
   p2->getRooks().push_back(std::pair<int,int>(0, 1));
   p2->getRooks().push_back(std::pair<int,int>(0, 7));
@@ -101,17 +105,11 @@ void ChessGame::startGame() {
 }
 
 void ChessGame::endGame(Xwindow &xw) {
-  delete p1;
-  delete p2;
-  delete gd;
-  p1 = nullptr;
-  p2 = nullptr;
-  gd = new GraphicsDisplay{xw};
   theBoard.clearBoard();
 }
 
 void ChessGame::add(bool player, std::string type, int row, int col) {
-  Player *p = player ? p1: p2;
+  std::shared_ptr<Player> p = player ? p1: p2;
   std::pair<int, int> k = std::pair<int, int>(row, col);
   if (type == "P" || type == "p") {
     p->getPawns().push_back(k);
@@ -126,11 +124,12 @@ void ChessGame::add(bool player, std::string type, int row, int col) {
   } else if (type == "K" || type == "k") {
     p->getKing().push_back(k);
   }
+  p = nullptr;
 }
 
 // used for updatePlayer
 void ChessGame::remove(bool player, std::string type, int r, int c) {
-  Player *p = player ? p1: p2;
+  std::shared_ptr<Player> p = player ? p1: p2;
   int len = 0;
   if (type == "P" || type == "p") {
     len = p->getPawns().size();
@@ -175,6 +174,7 @@ void ChessGame::remove(bool player, std::string type, int r, int c) {
       }
     }
   }
+  p = nullptr;
 } //
 
 void ChessGame::addPiece() {
@@ -260,6 +260,7 @@ bool ChessGame::Promotion(bool player, int r, int c, int row, std::string t) {
 }
 
 bool ChessGame::move(bool player, int r, int c, int row, int col, std::string promt) {
+
   if (r < 0 || r > 7 || c < 0 || c > 7 || row < 0 || row > 7 || col < 0 || col > 7) {
     return false;
   }
@@ -316,7 +317,7 @@ bool ChessGame::move(bool player, int r, int c, int row, int col, std::string pr
 
 // computerMove
 void ChessGame::computerMove(bool player) {
-  Player *p = player ? p1: p2;
+  std::shared_ptr<Player> p = player ? p1: p2;
   std::string level = p->getLevel();
   std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> range = theBoard.computerMove(player, level);
   int size = range.size();
@@ -348,6 +349,7 @@ void ChessGame::computerMove(bool player) {
     }
     --times;
   }
+  p = nullptr;
 }
 
 // update the GraphicsDisplay of the board
