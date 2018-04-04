@@ -32,93 +32,23 @@ int main(int argc, char *argv[]) {
         cout << "White: " << wScore << endl;
         cout << "Black: " << bScore << endl;
         break;
-      } else if (cmd == "setup") {
+      } else if (cmd == "setup") { //setup mode
+
+
         inSetup = true;
+
+
         cout << game;
-      } else if (cmd == "+" && inSetup ==  true) {
-        string t;
-        string coordinate;
-        cin >> t >> coordinate;
-        game.setUp(cmd, coordinate, t);
-        cout << game;
-      } else if (cmd == "-" && inSetup ==  true) {
-        string coordinate;
-        cin >> coordinate;
-        game.setUp(cmd, coordinate, "");
-        cout << game;
-      } else if (cmd == "done" && inSetup ==  true) {
-        goodSetup = game.setUp(cmd, "", "");
-        if (goodSetup == false) {
-          cout << "Illegal Setup" << endl;
-          cout << "Do some changes" << endl;
-        } else {
-          cout << game;
-          ifSetup = true;
-          inSetup = false;
-        }
-      } else if (cmd == "game") {
+      } else if (cmd == "game") { //standard game
+
         if (ifSetup ==  false) {
           cin >> p1 >> p2;
-          game.startGame(p1, p2);
-          if(p1 != "human") h1 = false;
-          if(p2 != "human") h2 = false;
-        }
-        cout << game;
-      }  else if (cmd == "move") {
-        // if(turn == 1 && !h1) {
-        //   // game.computerMove(turn);
-        // }
-        // if(turn == 0 && !h2) {
-        //   game.computerMove(turn);
-        // }
-        if ((turn == 1 && h1) || (turn == 0 && h2)) {//check if human player
-          string from;
-          string dest;
-          cin >> from >> dest;
-          std::pair<int, int> f = game.getLocation(from);
-          std::pair<int, int> d = game.getLocation(dest);
-          int r = f.first;
-          int c = f.second;
-          int row = d.first;
-          int col = d.second;
+          game.standardGame(p1, p2);
 
-          bool tryMove = game.move(turn, r, c, row, col);
-          if (!tryMove) {
-            cout << "Illegal Move" << endl;
-            cout << "Please Try Again" << endl;
-            continue;
-          } else {
-
-          }
-        }
-
-
-        
-        // staleMate = game.staleMate();
-        checkMate = game.checkMate(turn);
-        // if (staleMate ==  true) {
-        //   cout << "Draw" << endl;
-        //   wScore += 0.5;
-        //   bScore += 0.5;
-        // } else
-        if (checkMate ==  true) {
-          if (turn == true) {
-            wScore += 1;
-            cout << "White Wins" << endl;
-          } else {
-            bScore += 1;
-            cout << "Black Wins" << endl;
-          }
-        }
-        if (turn == 1) {
-          turn = 0;
-        } else {
-          turn = 1;
         }
         cout << game;
       }
     }
-  }
-  catch (ios::failure &) {}  // Any I/O failure quits
+  } catch (ios::failure &) {}  // Any I/O failure quits
 
 }

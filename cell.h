@@ -3,10 +3,10 @@
 #include <iostream>
 #include "piece.h"
 
-class Cell {
-  int r, c;
-  bool colour;
-  Piece *p;
+class Cell : public Subject<info, State>, public Observer<Info, State> {
+  std::pair<int, int> cellLoc;
+  bool tileColour;
+  std::unique_ptr<Piece> p;
 
  public:
   Cell();
@@ -17,11 +17,12 @@ class Cell {
   void clearPiece();
 
   //bool movePiece(bool player, int row, int col);
-  void setPiece(std::string s, bool colour);    // Place a piece of given colour here.
+  // Place a piece of given colour here.
+  void setPiece(std::string s, bool colour);   
+
   void attackPiece(std::string s, bool colour);
-  //void attackPiece(Piece p);
-  // void notify(bool player, int r, int c, std::string type, std::vector<std::pair<int, int>> &v) override;// My neighbours will call this
-                                                // when they've changed state
+
+  void notify(Subject<Info, State> &whoFrom) override;
   friend std::ostream &operator<<(std::ostream &out, const Cell &c);
 };
 #endif

@@ -9,7 +9,17 @@
 class Observer;
 
 class ChessBoard {
-  std::vector<std::vector<Cell>> board;  // The actual
+  //a board consists of the vector vector Cells 8x8 cells
+  std::vector<std::vector<Piece>> board;
+  //text display
+
+  //graphics display
+
+  //observer intented for graphics??????
+
+
+
+  //square size 8, don't need?
   int size;
 
  public:
@@ -20,6 +30,10 @@ class ChessBoard {
   std::vector<std::vector<Cell>> &getBoard();
 
   void init(); // Sets up an n x n grid.  Clears old grid, if necessary.
+
+  //determine if move is blocked?
+
+
   void addPiece(int r, int c, std::string type, bool colour);
   void removePiece(int r, int c);
   void setUpOb();

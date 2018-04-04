@@ -2,6 +2,7 @@
 #define PLAYER_H
 #include <string>
 #include <vector>
+#include <memory>
 #include "piece.h"
 #include "pawn.h"
 #include "king.h"
@@ -10,30 +11,25 @@
 #include "knight.h"
 #include "rook.h"
 
-
+//abstract player class
 class Player {
-  std::string player;
+  //shared amongst all player objects (Human, Computer)
+  //name
+  std::string name;
+  //the colour
   bool colour;
 
-  std::vector<std::pair<int, int>> queen;
-  std::vector<std::pair<int, int>> king;
-  std::vector<std::pair<int, int>> knights;
-  std::vector<std::pair<int, int>> bishops;
-  std::vector<std::pair<int, int>> rooks;
-  std::vector<std::pair<int, int>> pawns;
-
   public:
-  Player(bool colour);
-  virtual ~Player();
-  std::vector<std::pair<int, int>> &getRooks();
-  std::vector<std::pair<int, int>> &getBishops();
-  std::vector<std::pair<int, int>> &getKnights();
-  std::vector<std::pair<int, int>> &getPawns();
-  std::vector<std::pair<int, int>> &getKing();
-  std::vector<std::pair<int, int>> &getQueen();
-  void setPlayer(std::string p);
-  virtual void setLevel(int l);
-  bool getColour();
+    //ctors
+    Player(std::string &name, bool &colour);
+    virtual ~Player();
+
+    //pure virtual method for getting a move from either player
+    virtual std::pair<std::pair<int, int>, std::pair<int, int>> getMove() = 0;
+
+    //getters
+    std::string getName();
+    bool getColour();
 };
 
 #endif

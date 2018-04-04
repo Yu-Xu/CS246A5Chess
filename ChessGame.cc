@@ -1,12 +1,130 @@
 #include "ChessGame.h"
 #include <string>
+#include <iostream>
 
 ChessGame::ChessGame():
   theBoard{ChessBoard{}},
   p1{std::make_unique<Player>(true)},
-  p2{std::make_unique<Player>(false)} {}
+  p2{std::make_unique<Player>(false)},
+  wScore{0}, bScore{0} {}
 
 ChessGame::~ChessGame() {}
+
+void ChessGame::standardGame(std::string &p1, std::string &p2) {
+  cin.exceptions(ios::eofbit|ios::failbit);
+  //whose turn it is, is player1, player2 human or computer
+  bool turn = 1, h1 = true, h2 = true;
+
+  if(p1 != "human") h1 = false;
+  if(p2 != "human") h2 = false;
+
+  // bool staleMate = false;
+  bool checkMate = false;
+
+  string cmd;
+
+  try {
+    while (cin >> cmd) {
+      if (cmd == "move") {
+        // if(turn == 1 && !h1) {
+        //   // game.computerMove(turn);
+        // }
+        // if(turn == 0 && !h2) {
+        //   game.computerMove(turn);
+        // }
+        if ((turn == 1 && h1) || (turn == 0 && h2)) {//check if human player
+          string from;
+          string dest;
+          cin >> from >> dest;
+          std::pair<int, int> f = game.getLocation(from);
+          std::pair<int, int> d = game.getLocation(dest);
+          int r = f.first;
+          int c = f.second;
+          int row = d.first;
+          int col = d.second;
+
+          bool tryMove = game.move(turn, r, c, row, col);
+          if (!tryMove) {
+            cout << "Illegal Move" << endl;
+            cout << "Please Try Again" << endl;
+            continue;
+          } else {
+
+          }
+        }
+        // staleMate = game.staleMate();
+        checkMate = game.checkMate(turn);
+        // if (staleMate ==  true) {
+        //   cout << "Draw" << endl;
+        //   wScore += 0.5;
+        //   bScore += 0.5;
+        // } else
+        if (checkMate ==  true) {
+          if (turn == true) {
+            wScore += 1;
+            cout << "White Wins" << endl;
+          } else {
+            bScore += 1;
+            cout << "Black Wins" << endl;
+          }
+        }
+        if (turn == 1) {
+          turn = 0;
+        } else {
+          turn = 1;
+        }
+        cout << game;
+      }
+    }
+  } catch (ios::failure &) {}  // Any I/O failure quit
+}
+
+
+
+void ChessGame::setUpMode() {
+  std::string cmd;
+
+  try {
+    while (cin >> cmd) {
+      if (cmd == "+" && inSetup ==  true) {
+        string t;
+        string coordinate;
+        cin >> t >> coordinate;
+        game.setUp(cmd, coordinate, t);
+        cout << game;
+      } else if (cmd == "-" && inSetup ==  true) {
+        string coordinate;
+        cin >> coordinate;
+        game.setUp(cmd, coordinate, "");
+        cout << game;
+      } else if (cmd == "done" && inSetup ==  true) {
+          goodSetup = game.setUp(cmd, "", "");
+        if (goodSetup == false) {
+          cout << "Illegal Setup" << endl;
+          cout << "Do some changes" << endl;
+        } else {
+          cout << game;
+          ifSetup = true;
+          inSetup = false;
+        }
+      }
+    }
+  } catch (ios::failure &) {}
+}
+
+void ChessGame::playSetup() {
+  
+}
+
+
+
+
+
+
+
+
+
+
 
 std::pair<int, int> ChessGame::getLocation(std::string location) {
   char row = location[1];

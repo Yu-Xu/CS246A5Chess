@@ -1,25 +1,45 @@
 #ifndef PIECE_H
 #define PIECE_H
 #include <string>
+#include <utility>
+#include <memory>
+#include <vector>
 #include "Subject.h"
 #include "observer.h"
 
-struct Piece: public Subject, public Observer {
+//abstract piece class
+// all pieces have their typename
+// boolean colour (W,B) true=W false=B
+// location(std::pair) current location
+// Vector of Pairs for coordinates that they can move to
+class Piece {
   std::string type;  // See above
   bool colour;   // What colour was the new piece?  (NOT what is my colour)
-  int r, c;
-  bool check;
+  std::pair<int, int> coord;
+  std::vector<std::pair<int, int>> legalMoves;
 
-  Piece(std::string t, bool colour, int row, int col);
-  ~Piece() override;
+  public:
+    Piece(std::string &type, bool &colour, std::pair<int, int> &coord);
+    Piece(std::string &type, bool &colour,
+      std::pair<int, int> &coord, std::vector<std::pair<int, int>> &lm);
+    Piece(const Piece &p);
+    Piece(const Piece &&p);
+    Piece &operator=(const Piece &rhs);
+    Piece &operator=(const Piece &&rhs);
+    ~Piece();
 
-  void notify(bool player, int r, int c, std::string type, std::vector<std::pair<int, int>> &v) override;
-  virtual bool legalMove(int row, int col) = 0;
-  virtual bool getPassant();
-  virtual bool getFirst();
-  virtual void setPassant(bool passant);
-  virtual void setFirst(bool first);
-  void print() override;
+    //virtual method for rules of the 6 pieces
+    //finds all legal moves currently
+    virtual void loadLegalMoves() = 0;
+
+    //is move legal
+    virtual bool legalMove(std::pair<int, int> dest) = 0;
+
+    //getters
+    bool getColour();
+    std::string getType();
+    std::pair<int, int> getCoord();
+    std::vector<std::pair<int, int>> getMoves();
 };
 
 #endif
