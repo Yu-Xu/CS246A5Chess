@@ -19,11 +19,11 @@ bool Knight::legalMove(int destinationRow, int destinationCol) {
 		return false;
 	}
 }
-void Knight::notify()
-{
-	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
-	if(moveFrom == this->getLocation())
-	{
-		std::cout << "It's looking for me Knight!" << std::endl;
-	}
-}
+// void Knight::notify()
+// {
+// 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+// 	if(moveFrom == this->getLocation())
+// 	{
+// 		std::cout << "It's looking for me Knight!" << std::endl;
+// 	}
+// }

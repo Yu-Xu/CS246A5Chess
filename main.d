@@ -1,2 +1,2 @@
-main.o: main.cc ChessBoard.h subject.h observer.h piece.h pawn.h rook.h \
- bishop.h knight.h king.h queen.h emptycell.h
+main.o: main.cc ChessGame.h ChessBoard.h subject.h observer.h player.h \
+ human.h computer.h

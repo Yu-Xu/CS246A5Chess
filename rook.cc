@@ -27,11 +27,11 @@ void Rook::setFirst(bool first) {
   this->first = first;
 }
 
-void Rook::notify()
-{
-	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
-	if(moveFrom == this->getLocation())
-	{
-		std::cout << "It's looking for me! Rook" << std::endl;
-	}
-}
+// void Rook::notify()
+// {
+// 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+// 	if(moveFrom == this->getLocation())
+// 	{
+// 		std::cout << "It's looking for me! Rook" << std::endl;
+// 	}
+// }

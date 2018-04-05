@@ -57,21 +57,21 @@ void Pawn::setFirst(bool first) {
   this->first = first;
 }
 
-void Pawn::notify() {
-	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+// void Pawn::notify() {
+// 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
 
-	if(moveFrom == this->getLocation())
-	{
-		std::cout << "It's looking for me Pawn!" << std::endl;
-    std::pair<int,int> moveTo = getSubject()->getMoveTo();
-    if(legalMove(moveTo.first, moveTo.second))
-    {
-      std::cout << "It's a legit move mate!" << std::endl;
-    }
-    else
-    {
-      std::cout << "I wont allow this move!" << std::endl;
+// 	if(moveFrom == this->getLocation())
+// 	{
+// 		std::cout << "It's looking for me Pawn!" << std::endl;
+//     std::pair<int,int> moveTo = getSubject()->getMoveTo();
+//     if(legalMove(moveTo.first, moveTo.second))
+//     {
+//       std::cout << "It's a legit move mate!" << std::endl;
+//     }
+//     else
+//     {
+//       std::cout << "I wont allow this move!" << std::endl;
 
-    }
-	}
-}
+//     }
+// 	}
+// }

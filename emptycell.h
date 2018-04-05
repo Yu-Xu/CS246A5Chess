@@ -9,7 +9,7 @@ public:
 	EmptyCell(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
 	~EmptyCell();
 	
-	void notify() override;
+	//void notify() override;
 	bool legalMove(int destinationRow, int destinationCol) override;
 
 };

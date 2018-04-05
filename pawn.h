@@ -11,7 +11,7 @@ class Pawn: public Piece {
   Pawn(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
   ~Pawn();
 
-  void notify() override;
+  //void notify() override;
   bool legalMove(int destinationRow, int destinationCol) override;
   bool getPassant() const;
   bool getFirst() const;

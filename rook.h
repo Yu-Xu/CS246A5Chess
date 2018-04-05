@@ -10,7 +10,7 @@ class Rook: public Piece {
   Rook(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
   ~Rook();
 
-  void notify() override;
+  //void notify() override;
   bool legalMove(int row, int col) override;
   bool getFirst() const;
   void setFirst(bool first);

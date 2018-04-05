@@ -6,8 +6,8 @@
 #include <memory>
 #include "ChessBoard.h"
 #include "player.h"
-#include "Human.h"
-#include "Computer.h"
+#include "human.h"
+#include "computer.h"
 
 //class that represents a single session of a game
 class ChessGame {
