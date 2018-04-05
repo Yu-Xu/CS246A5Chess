@@ -15,19 +15,17 @@ bool Queen::legalMove(int destinationRow, int destinationCol) {
 	int row = getLocation().first;
 	int col = getLocation().second;
 	if ((row == destinationRow && col != destinationCol) || (row != destinationRow && col == destinationCol)) {
-	    return true;
+		return true;
 	} else if ((destinationRow - row == col - destinationCol) || (destinationRow - row == destinationCol - col)) {
 		return true;
 	} else {
-	    return false;
+    return false;
 	}
 }
 
-void Queen::notify()
-{
+void Queen::notify() {
 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
-	if(moveFrom == this->getLocation())
-	{
+	if(moveFrom == this->getLocation()) {
 		std::cout << "It's looking for me Queen!" << std::endl;
 	}
 }

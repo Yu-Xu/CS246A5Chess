@@ -57,7 +57,7 @@ void Pawn::setFirst(bool first) {
   this->first = first;
 }
 
-void Pawn::notify(){
+void Pawn::notify() {
 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
 
 	if(moveFrom == this->getLocation())

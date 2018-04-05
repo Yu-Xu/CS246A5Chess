@@ -1,0 +1,67 @@
+FOR CHECKS
+  ->if some1's king is in check every move is invalid except:
+    1. king moving
+      - does not include castling, can't castling when in check
+        and can't castling if any of the 3 castling cells are in the path
+        of any enemy path
+    2. a piece that blocks the attacking path
+    3. a piece that can attack the threatening piece
+    -> if no moves are available, then checkmate the game ends
+
+->King should have a method to determine all of King's available moves
+->for every other piece, to check if they can either take or block the
+  threatening piece, compare the stored list of moves with:
+  1. the threat coord
+  2. the threat attack path to the king
+
+ways to end the game
+  1. checkmate
+  2. a player resigns
+  3. stalemate
+
+main commands
+->game //new standard game (main)
+  - done in ChessGame method
+  ->after you start a new game, should enter a loop until game over
+    -loop for new move commands
+    -> move
+      - move          //computer move
+      - move __ __    //human regular move
+      - move __ __ _  //human pawn promotion
+    -or resign command
+    -> resign
+    -or until some1 is checkmate, game ends
+
+->setup //enter setup mode (main)
+  -done in ChessGame method
+  ->loop until done
+    -> + __ __ commands
+    -> - __ commands
+    -> = colour command
+    -> done command
+
+
+New Plan:
+
+ChessGame
+  ->ChessBoard
+    ->x64 vectorx8 vectorx8 <Piece>
+
+
+pieces keeps track of the moves, either a number of available moves
+or a vector of pairs,
+
+method that checks for if there are available moves, per player
+so split the colour pieces
+
+
+
+  ->Player1
+    ->string name
+    ->bool colour
+    ->getMove()
+
+  ->Player2
+    ->string name
+    ->bool colour
+    ->getMove()
