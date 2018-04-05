@@ -13,3 +13,4 @@ public:
 	bool legalMove(int destinationRow, int destinationCol) override;
 
 };
+#endif

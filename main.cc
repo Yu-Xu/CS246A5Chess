@@ -7,6 +7,7 @@
 #include "knight.h"
 #include "king.h"
 #include "queen.h"
+#include "emptycell.h"
 
 int main()
 {
@@ -18,19 +19,23 @@ int main()
 	Bishop b1{std::make_unique<ChessBoard>(testBoard), 1, 3, 8};
 	Knight n1{std::make_unique<ChessBoard>(testBoard), 1, 3, 9};
 	King k1{std::make_unique<ChessBoard>(testBoard), 1, 2, 9};
-	Queen q1{std::make_unique<ChessBoard>(testBoard), 1, 3, 4};
+	Queen q1{std::make_unique<ChessBoard>(testBoard), 1, 1, 7};
+	EmptyCell e1{std::make_unique<ChessBoard>(testBoard), 1, 3, 4};
 	Pawn * ptrP = &p1;
 	Rook * ptrR = &r1;
 	Bishop * ptrB = &b1;
 	Knight * ptrN = &n1;
 	King * ptrK = &k1;
 	Queen * ptrQ = &q1;
+	EmptyCell * ptrE = &e1;
 	testBoard.attach(ptrP);
 	testBoard.attach(ptrR);
 	testBoard.attach(ptrB);
 	testBoard.attach(ptrN);
 	testBoard.attach(ptrK);
 	testBoard.attach(ptrQ);
+	testBoard.attach(ptrE);
+
 	testBoard.notifyObservers();
 	return 0;
 }
