@@ -2,10 +2,12 @@
 #include <iostream>
 
 Pawn::Pawn(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1}, passant{0} {
-	//std::cout << "HELLOOO" << std::endl;
+	getSubject()->attach(this);
 }
 
-Pawn::~Pawn() {}
+Pawn::~Pawn() {
+  getSubject()->detach(this);
+}
 
 bool Pawn::legalMove(int destinationRow, int destinationCol) {
   int vdist;
@@ -56,9 +58,20 @@ void Pawn::setFirst(bool first) {
 }
 
 void Pawn::notify(){
-	std::pair<int,int> wantedLocation = getSubject()->getWantedLocation();
-	if(wantedLocation == this->getLocation())
+	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+
+	if(moveFrom == this->getLocation())
 	{
 		std::cout << "It's looking for me Pawn!" << std::endl;
+    std::pair<int,int> moveTo = getSubject()->getMoveTo();
+    if(legalMove(moveTo.first, moveTo.second))
+    {
+      std::cout << "It's a legit move mate!" << std::endl;
+    }
+    else
+    {
+      std::cout << "I wont allow this move!" << std::endl;
+
+    }
 	}
 }

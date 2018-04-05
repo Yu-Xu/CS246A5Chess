@@ -1,9 +1,13 @@
 #include "knight.h"
 #include <iostream>
 
-Knight::Knight(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {}
+Knight::Knight(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
+	getSubject()->attach(this);
+}
 
-Knight::~Knight() {}
+Knight::~Knight() {
+	getSubject()->detach(this);
+}
 
 bool Knight::legalMove(int destinationRow, int destinationCol) {
 	int row = getLocation().first;
@@ -17,8 +21,8 @@ bool Knight::legalMove(int destinationRow, int destinationCol) {
 }
 void Knight::notify()
 {
-	std::pair<int,int> wantedLocation = getSubject()->getWantedLocation();
-	if(wantedLocation == this->getLocation())
+	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+	if(moveFrom == this->getLocation())
 	{
 		std::cout << "It's looking for me Knight!" << std::endl;
 	}

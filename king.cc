@@ -2,9 +2,13 @@
 #include <iostream>
 
 King::King(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col):
-  Piece{subject, colour, row, col, 0}, first{1} {}
+  Piece{subject, colour, row, col, 0}, first{1} {
+    getSubject()->attach(this);
+  }
 
-King::~King() {}
+King::~King() {
+  getSubject()->detach(this);
+}
 
 bool King::legalMove(int destinationRow, int destinationCol) {
   int row = getLocation().first;
@@ -31,8 +35,8 @@ void King::setFirst(bool first) {
 
 void King::notify()
 {
-  std::pair<int,int> wantedLocation = getSubject()->getWantedLocation();
-  if(wantedLocation == this->getLocation())
+  std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+  if(moveFrom == this->getLocation())
   {
     std::cout << "It's looking for me King!" << std::endl;
   }

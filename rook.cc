@@ -1,9 +1,13 @@
 #include "rook.h"
 #include <iostream>
 
-Rook::Rook(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1} {}
+Rook::Rook(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1} {
+	getSubject()->attach(this);
+}
 
-Rook::~Rook() {}
+Rook::~Rook() {
+	getSubject()->detach(this);
+}
 
 bool Rook::legalMove(int destinationRow, int destinationCol) {
 	int row = getLocation().first;
@@ -25,8 +29,8 @@ void Rook::setFirst(bool first) {
 
 void Rook::notify()
 {
-	std::pair<int,int> wantedLocation = getSubject()->getWantedLocation();
-	if(wantedLocation == this->getLocation())
+	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+	if(moveFrom == this->getLocation())
 	{
 		std::cout << "It's looking for me! Rook" << std::endl;
 	}

@@ -11,31 +11,16 @@
 
 int main()
 {
-	ChessBoard testBoard;
-	std::make_unique<ChessBoard>(testBoard);
+	std::shared_ptr<ChessBoard> testBoardPtr = std::make_shared<ChessBoard>();
 
-	Pawn p1{std::make_unique<ChessBoard>(testBoard), 1, 3, 5};
-	Rook r1{std::make_unique<ChessBoard>(testBoard), 1, 2, 4};
-	Bishop b1{std::make_unique<ChessBoard>(testBoard), 1, 3, 8};
-	Knight n1{std::make_unique<ChessBoard>(testBoard), 1, 3, 9};
-	King k1{std::make_unique<ChessBoard>(testBoard), 1, 2, 9};
-	Queen q1{std::make_unique<ChessBoard>(testBoard), 1, 1, 7};
-	EmptyCell e1{std::make_unique<ChessBoard>(testBoard), 1, 3, 4};
-	Pawn * ptrP = &p1;
-	Rook * ptrR = &r1;
-	Bishop * ptrB = &b1;
-	Knight * ptrN = &n1;
-	King * ptrK = &k1;
-	Queen * ptrQ = &q1;
-	EmptyCell * ptrE = &e1;
-	testBoard.attach(ptrP);
-	testBoard.attach(ptrR);
-	testBoard.attach(ptrB);
-	testBoard.attach(ptrN);
-	testBoard.attach(ptrK);
-	testBoard.attach(ptrQ);
-	testBoard.attach(ptrE);
+	Pawn p1{testBoardPtr, 1, 3, 5};
+	Rook r1{testBoardPtr, 1, 2, 4};
+	Bishop b1{testBoardPtr, 1, 3, 8};
+	Knight n1{testBoardPtr, 1, 3, 9};
+	King k1{testBoardPtr, 1, 2, 9};
+	Queen q1{testBoardPtr, 1, 1, 7};
+	EmptyCell e1{testBoardPtr, 1, 3, 4};
 
-	testBoard.notifyObservers();
+	testBoardPtr->move(std::pair<int,int>(3,5), std::pair<int,int>(4,5));
 	return 0;
 }

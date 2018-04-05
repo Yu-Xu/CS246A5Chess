@@ -7,7 +7,20 @@ ChessBoard::ChessBoard() {}
 
 ChessBoard::~ChessBoard() {}
 
-std::pair<int,int> ChessBoard::getWantedLocation() const
+void ChessBoard::move(std::pair<int,int> moveFrom, std::pair<int,int> moveTo)
 {
-	return std::pair<int,int>(3,4);
+	this->moveFrom = moveFrom;
+	this->moveTo = moveTo;
+	//std::cout << moveFrom.first << ", " << moveFrom.second << " and " << moveTo.first << ", " << moveTo.second << std::endl;
+	notifyObservers();
+}
+
+std::pair<int,int> ChessBoard::getMoveFrom() const
+{
+	return this->moveFrom;
+}
+
+std::pair<int,int> ChessBoard::getMoveTo() const
+{
+	return this->moveTo;
 }
