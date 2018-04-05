@@ -21,6 +21,7 @@ int main()
 	Queen q1{testBoardPtr, 1, 1, 7};
 	EmptyCell e1{testBoardPtr, 1, 3, 4};
 
-	testBoardPtr->move(std::pair<int,int>(3,5), std::pair<int,int>(4,5));
+	testBoardPtr->move(std::pair<int,int>(3,5), std::pair<int,int>(4,5)); // Legit move
+	testBoardPtr->move(std::pair<int,int>(3,5), std::pair<int,int>(7,5)); // bad move
 	return 0;
 }
