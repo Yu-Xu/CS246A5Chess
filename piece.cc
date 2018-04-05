@@ -32,7 +32,7 @@ ChessBoard * Piece::getSubject() const
 
 //Since this is common for all pieces, I decided to put it in this class
 //It will call the corresponding legalMove() which is overridden in the subclasses themselves
-void Piece::notify() {
+bool Piece::notify() {
 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
 	std::pair<int,int> moveTo = getSubject()->getMoveTo();
 	std::pair<int,int> pieceLocation = this->getLocation();
@@ -41,21 +41,25 @@ void Piece::notify() {
 	{
     	if(this->isEmpty())
     	{
-    		//return false; //Cant move an empty piece
+    		return false; //Cant move an empty piece
     	}
 	    if(legalMove(moveTo.first, moveTo.second))
 	    {
 	      std::cout << "It's a legit move mate!" << std::endl;
-	      //return true;
+	      return true;
 	    }
 	    else
 	    {
 	      std::cout << "I wont allow this move!" << std::endl;
-	      //return false;
+	      return false;
 	    }
 	}
-	else //Cases where the current piece is in the way of the move
+	else //Cases where the current piece is not the one being moved but might be in the way of the move
 	{
+		if(this->isEmpty())
+		{
+			return true;
+		}
 		//Horizontal move
 		if(moveFrom.first == moveTo.first)
 		{
@@ -63,7 +67,8 @@ void Piece::notify() {
 				pieceLocation.second > std::min(moveFrom.second, moveTo.second) && 
 				pieceLocation.second < std::max(moveFrom.second, moveTo.second))
 			{
-				std::cout << "In the way!" << std::endl;
+				//std::cout << "In the way!" << std::endl;
+				return false;
 			}
 		}
 		//Vertical move
@@ -73,7 +78,8 @@ void Piece::notify() {
 				pieceLocation.first > std::min(moveFrom.first, moveTo.first) && 
 				pieceLocation.first < std::max(moveFrom.first, moveTo.first))
 			{
-				std::cout << "In the way!!" << std::endl;
+				//std::cout << "In the way!!" << std::endl;
+				return false;
 			}
 		}
 		//Diagonal move
@@ -85,12 +91,12 @@ void Piece::notify() {
 				(pieceLocation.first > std::min(moveFrom.first, moveTo.first) ) &&
 				(pieceLocation.first < std::max(moveFrom.first, moveTo.first) ) )
 			{
-				std::cout << "In the way!!!" << std::endl;
+				//std::cout << "In the way!!!" << std::endl;
+				return false;
 			}
 		}
+		return true;
 	}
-
-	
-
-	
+	// std::cout << "We should never get here! :piece.cc/notify(), line 100" << std::endl;
+	// return true; //for some reason I get a warning if I remove this one but we should never get here
 }

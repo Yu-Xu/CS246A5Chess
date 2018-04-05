@@ -25,6 +25,8 @@
  	Pawn p1{testBoardPtr, 1, 1, 5};
  	Pawn p2{testBoardPtr, 1, 4, 2};
  
-	testBoardPtr->move(std::pair<int,int>(2,4), std::pair<int,int>(1,3));
+ 	testBoardPtr->move(std::pair<int,int>(2,4), std::pair<int,int>(0,5));
+	
+
  	return 0;
  }
