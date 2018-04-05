@@ -1,16 +1,20 @@
 #include "bishop.h"
+#include <iostream>
 
-Bishop::Bishop(std::string s, bool colour, int row, int col): Piece{s, colour, row, col} {}
+Bishop::Bishop(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
+  getSubject()->attach(this);
+}
 
-//, check{false} {}
 
-Bishop::~Bishop() {}
+Bishop::~Bishop() {
+  getSubject()->detach(this);
+}
 
-bool Bishop::legalMove(int row, int col) {
-    // std::cout << "Pawn r " << r << " c " << c << std::endl;
-    // std::cout << "Pawn row " << row << " col " << col << std::endl;
-  if (r != row && c != col) {
-    if ((row - r == c - col) || (row - r == col - c)) {
+bool Bishop::legalMove(int destinationRow, int destinationCol) {
+  int row = getLocation().first;
+  int col = getLocation().second;
+  if (row != destinationRow && col != destinationCol) {
+    if ((destinationRow - row == col - destinationCol) || (destinationRow - row == destinationCol - col)) {
       return true;
     } else {
       return false;
@@ -18,4 +22,13 @@ bool Bishop::legalMove(int row, int col) {
   } else {
     return false;
   }
+}
+
+void Bishop::notify()
+{
+    std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+    if(moveFrom == this->getLocation())
+    {
+      std::cout << "It's looking for me! Bishop" << std::endl;
+    }
 }

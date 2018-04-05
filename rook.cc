@@ -1,25 +1,37 @@
 #include "rook.h"
+#include <iostream>
 
-Rook::Rook(std::string s, bool colour, int row, int col): Piece{s, colour, row, col}, first{1} {}
-
-//, check{false} {}
-
-Rook::~Rook() {}
-
-bool Rook::legalMove(int row, int col) {
-    // std::cout << "Pawn r " << r << " c " << c << std::endl;
-    // std::cout << "Pawn row " << row << " col " << col << std::endl;
-  if ((r == row && c != col) || (r != row && c == col)) {
-    return true;
-  } else {
-    return false;
-  }
+Rook::Rook(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1} {
+	getSubject()->attach(this);
 }
 
-bool Rook::getFirst() {
+Rook::~Rook() {
+	getSubject()->detach(this);
+}
+
+bool Rook::legalMove(int destinationRow, int destinationCol) {
+	int row = getLocation().first;
+	int col = getLocation().second;
+	if ((row == destinationRow && col != destinationCol) || (row != destinationRow && col == destinationCol)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool Rook::getFirst() const {
   return this->first;
 }
 
 void Rook::setFirst(bool first) {
   this->first = first;
+}
+
+void Rook::notify()
+{
+	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+	if(moveFrom == this->getLocation())
+	{
+		std::cout << "It's looking for me! Rook" << std::endl;
+	}
 }

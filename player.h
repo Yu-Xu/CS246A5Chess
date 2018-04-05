@@ -2,18 +2,11 @@
 #define PLAYER_H
 #include <string>
 #include <vector>
-#include <memory>
-#include "piece.h"
-#include "pawn.h"
-#include "king.h"
-#include "queen.h"
-#include "bishop.h"
-#include "knight.h"
-#include "rook.h"
+#include <utility>
 
 //abstract player class
 class Player {
-  //shared amongst all player objects (Human, Computer)
+
   //name
   std::string name;
   //the colour
@@ -21,6 +14,7 @@ class Player {
 
   public:
     //ctors
+    Player();
     Player(std::string &name, bool &colour);
     virtual ~Player();
 

@@ -6,16 +6,11 @@
 class Knight: public Piece {
   //bool check;
 
-  public:
-    Knight(std::string &type, bool &colour, std::pair<int, int> &coord);
-    Knight(std::string &type, bool &colour, std::pair<int, int> &coord,
-      std::pair<int, int> &coord, std::vector<std::pair<int, int>> &lm);
-    ~Knight();
+ public:
+  Knight(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
+  ~Knight();
 
-    //method for determining all the legal moves of piece
-    void loadLegalMoves() override;
-
-    //method for returning if the move is legal, within range?
-    bool legalMove(std::pair<int, int> dest) override;
+  void notify() override;
+  bool legalMove(int row, int col) override;
 };
 #endif

@@ -1,54 +1,45 @@
 #include <iostream>
-// You may include other allowed headers, as needed
 #include "ChessGame.h"
-using namespace std;
 
-// Do not remove any code; do not add code other than where indicated.
+using namespace std;
 
 int main(int argc, char *argv[]) {
   cin.exceptions(ios::eofbit|ios::failbit);
-  //whose turn it is
-  bool turn = 1;
-  //is player1 human
-  bool h1 = true;
-  //is player2 human
-  bool h2 = true;
 
-  bool goodSetup = true;
-  bool inSetup = false;
-  bool ifSetup = false;
-  // bool staleMate = false;
-  bool checkMate = false;
-  int wScore = 0;
-  int bScore = 0;
   string cmd;
   ChessGame game;
-  string p1;
-  string p2;
+
   try {
     while (cin >> cmd) {
-      if (cin.eof()) {
-        cout << "Final Scores" << endl;
-        cout << "White: " << wScore << endl;
-        cout << "Black: " << bScore << endl;
-        break;
-      } else if (cmd == "setup") { //setup mode
+      if (cmd == "setup") { //setup mode
+				//call game setup method
+				game.setUpMode();
 
-
-        inSetup = true;
-
+				//if setup, then u just do game and play with setup board
+				//game.playSetup();
 
         cout << game;
-      } else if (cmd == "game") { //standard game
-
-        if (ifSetup ==  false) {
-          cin >> p1 >> p2;
-          game.standardGame(p1, p2);
-
-        }
-        cout << game;
+      } else if (cmd == "game") { //play game, whether setup board or not
+				string p1;
+				string p2;
+				while (cin >> p1 >> p2) {
+					if ((p1 == "human" || p1 == "computer1" || p1 == "computer2" ||
+						p1 == "computer3" || p1 == "computer4") &&
+						(p2 == "human" || p2 == "computer1" || p2 == "computer2" ||
+						p2 == "computer3" || p2 == "computer4")) {
+							game.startGame(p1, p2);
+					} else {
+						cout << "Hey! You are not inputting correctly..." << endl;
+						cout << "Options:" << endl;
+						cout << "1. human" << endl;
+						cout << "2. computer[1...4] (without the brackets)" << endl;
+					}
+				}
       }
     }
+		cout << "Final Scores" << endl;
+		cout << "White: " << game.getWScore() << endl;
+		cout << "Black: " << game.getBScore() << endl;
   } catch (ios::failure &) {}  // Any I/O failure quits
-
+	return 0;
 }

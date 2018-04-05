@@ -1,19 +1,31 @@
 #include "queen.h"
+#include <iostream>
 
-Queen::Queen(std::string s, bool colour, int row, int col): Piece{s, colour, row, col} {}
+Queen::Queen(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
+	getSubject()->attach(this);
+}
 
 //, check{false} {}
 
-Queen::~Queen() {}
+Queen::~Queen() {
+	getSubject()->detach(this);
+}
 
-bool Queen::legalMove(int row, int col) {
-  // std::cout << "Pawn r " << r << " c " << c << std::endl;
-  // std::cout << "Pawn row " << row << " col " << col << std::endl;
-  if ((r == row && c != col) || (r != row && c == col)) {
-    return true;
-  } else if ((row - r == c - col) || (row - r == col - c)) {
-    return true;
-  } else {
+bool Queen::legalMove(int destinationRow, int destinationCol) {
+	int row = getLocation().first;
+	int col = getLocation().second;
+	if ((row == destinationRow && col != destinationCol) || (row != destinationRow && col == destinationCol)) {
+		return true;
+	} else if ((destinationRow - row == col - destinationCol) || (destinationRow - row == destinationCol - col)) {
+		return true;
+	} else {
     return false;
-  }
+	}
+}
+
+void Queen::notify() {
+	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+	if(moveFrom == this->getLocation()) {
+		std::cout << "It's looking for me Queen!" << std::endl;
+	}
 }

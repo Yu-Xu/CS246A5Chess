@@ -1,32 +1,29 @@
 #include "piece.h"
 #include <iostream>
 
-Piece::Piece(std::string t, bool colour, int row, int col): type{t}, colour{colour},
- r{row}, c{col}, check {0} {}
+Piece::Piece(): subject{std::make_shared<ChessBoard>()}, colour{0}, location{std::pair<int,int>{-1, -1}}, empty{1} {
+	std::cout << "ARE WE HERE" << std::endl;
+}
 
- void Piece::notify(bool player, int r, int c, std::string type, std::vector<std::pair<int, int>> &v) {
-   return;
- }
-
-
- bool Piece::getPassant() {
-   return 0;
- }
-
- bool Piece::getFirst() {
-   return 0;
- }
-
- void Piece::setFirst(bool first) {
-   return;
- }
-
- void Piece::setPassant(bool passant) {
-   return;
- }
+Piece::Piece(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col, bool empty): subject{subject}, colour{colour}, location{std::pair<int,int>{row,col}}, empty{empty} {}
 
 Piece::~Piece() {}
 
-void Piece::print() {
-  std::cout << this->r << " " << this->c << std::endl;
+bool Piece::isEmpty() const
+{
+	return this->empty;
+}
+
+bool Piece::getColour() const
+{
+	return this->colour;
+}
+
+std::pair<int,int> Piece::getLocation() const
+{
+	return this->location;
+}
+ChessBoard * Piece::getSubject() const
+{
+	return this->subject.get();
 }

@@ -1,40 +1,21 @@
-#include "Subject.h"
-#include <iostream>
-#include "observer.h"
+#include "subject.h"
+
+Subject::Subject() {}
+Subject::~Subject() {}
 
 void Subject::attach(Observer *o) {
   observers.emplace_back(o);
 }
 
-Subject::~Subject() {}
-
-void Subject::deattach(Observer *o) {
-  int size = observers.size();
-  for(int i = 0; i < size; i++) {
-    if (observers[i] == o) {
-      // std::cout << "deattach" << std::endl;
-      observers.erase(observers.begin() + i);
+void Subject::detach(Observer *o) {
+  for (auto it = observers.begin(); it != observers.end(); ++it) {
+    if (*it == o) {
+      observers.erase(it);
+      break;
     }
   }
 }
 
-void Subject::notifyObservers(bool player, int r, int c,
-std::string type, std::vector<std::pair<int, int>> &v) {
-  for(unsigned int i = 0; i < observers.size(); i++) {
-    if(observers[i] == nullptr) {
-      std::cout << "null" << std::endl;
-      observers.erase(observers.begin() + i);
-    }
-  }
-  // std::cout << "size" << observers.size() << std::endl;
-  // int i = 0;
-  for (auto &ob : observers) {
-    ob->notify(player, r, c, type, v);
-  }
-}
-
-void Subject::getOb() {
-  for (auto &ob : observers) {
-    ob->print();
-  }
+void Subject::notifyObservers() {
+  for (auto ob : observers) ob->notify();
 }

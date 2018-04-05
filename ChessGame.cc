@@ -1,444 +1,256 @@
-#include "ChessGame.h"
 #include <string>
 #include <iostream>
+#include <utility>
+
+#include "ChessGame.h"
+
+using namespace std;
 
 ChessGame::ChessGame():
   theBoard{ChessBoard{}},
-  p1{std::make_unique<Player>(true)},
-  p2{std::make_unique<Player>(false)},
-  wScore{0}, bScore{0} {}
+  p1{make_unique<Player>()},
+  p2{make_unique<Player>()},
+  wScore{0}, bScore{0}, turn{true}, setBoard{false} {}
 
 ChessGame::~ChessGame() {}
 
-void ChessGame::standardGame(std::string &p1, std::string &p2) {
-  cin.exceptions(ios::eofbit|ios::failbit);
-  //whose turn it is, is player1, player2 human or computer
-  bool turn = 1, h1 = true, h2 = true;
-
-  if(p1 != "human") h1 = false;
-  if(p2 != "human") h2 = false;
-
-  // bool staleMate = false;
-  bool checkMate = false;
-
-  string cmd;
-
-  try {
-    while (cin >> cmd) {
-      if (cmd == "move") {
-        // if(turn == 1 && !h1) {
-        //   // game.computerMove(turn);
-        // }
-        // if(turn == 0 && !h2) {
-        //   game.computerMove(turn);
-        // }
-        if ((turn == 1 && h1) || (turn == 0 && h2)) {//check if human player
-          string from;
-          string dest;
-          cin >> from >> dest;
-          std::pair<int, int> f = game.getLocation(from);
-          std::pair<int, int> d = game.getLocation(dest);
-          int r = f.first;
-          int c = f.second;
-          int row = d.first;
-          int col = d.second;
-
-          bool tryMove = game.move(turn, r, c, row, col);
-          if (!tryMove) {
-            cout << "Illegal Move" << endl;
-            cout << "Please Try Again" << endl;
-            continue;
-          } else {
-
-          }
-        }
-        // staleMate = game.staleMate();
-        checkMate = game.checkMate(turn);
-        // if (staleMate ==  true) {
-        //   cout << "Draw" << endl;
-        //   wScore += 0.5;
-        //   bScore += 0.5;
-        // } else
-        if (checkMate ==  true) {
-          if (turn == true) {
-            wScore += 1;
-            cout << "White Wins" << endl;
-          } else {
-            bScore += 1;
-            cout << "Black Wins" << endl;
-          }
-        }
-        if (turn == 1) {
-          turn = 0;
-        } else {
-          turn = 1;
-        }
-        cout << game;
-      }
-    }
-  } catch (ios::failure &) {}  // Any I/O failure quit
-}
-
-
-
-void ChessGame::setUpMode() {
-  std::string cmd;
-
-  try {
-    while (cin >> cmd) {
-      if (cmd == "+" && inSetup ==  true) {
-        string t;
-        string coordinate;
-        cin >> t >> coordinate;
-        game.setUp(cmd, coordinate, t);
-        cout << game;
-      } else if (cmd == "-" && inSetup ==  true) {
-        string coordinate;
-        cin >> coordinate;
-        game.setUp(cmd, coordinate, "");
-        cout << game;
-      } else if (cmd == "done" && inSetup ==  true) {
-          goodSetup = game.setUp(cmd, "", "");
-        if (goodSetup == false) {
-          cout << "Illegal Setup" << endl;
-          cout << "Do some changes" << endl;
-        } else {
-          cout << game;
-          ifSetup = true;
-          inSetup = false;
-        }
-      }
-    }
-  } catch (ios::failure &) {}
-}
-
-void ChessGame::playSetup() {
-  
-}
-
-
-
-
-
-
-
-
-
-
-
-std::pair<int, int> ChessGame::getLocation(std::string location) {
+//get the coordinates from command for the piece to be set
+pair<int, int> ChessGame::convertCoord(string &location) {
   char row = location[1];
   char col = location[0];
   int r;
   int c;
   r = 8 - (row - '0');
   c = col - 'a';
-  return std::pair<int, int>(r, c);
+
+  return pair<int, int>(r, c);
 }
 
-void ChessGame::startGame(std::string player1, std::string player2) {
-  theBoard.init();
-  int len = 8;
-  this->p1->setPlayer(player1);
-  this->p2->setPlayer(player2);
-  if (player1 != "human") {
-    char c = player1[8];
-    if (c == '1') {
-      this->p1->setLevel(1);
-    } else if (c == '2') {
-      this->p1->setLevel(2);
-    } else if (c == '3') {
-      this->p1->setLevel(3);
-    } else if (c == '4') {
-      this->p1->setLevel(4);
-    }
-  }
-  if (player2 != "human") {
-    char c = player2[8];
-    if (c == '1') {
-      this->p2->setLevel(1);
-    } else if (c == '2') {
-      this->p2->setLevel(2);
-    } else if (c == '3') {
-      this->p2->setLevel(3);
-    } else if (c == '4') {
-      this->p2->setLevel(4);
-    }
-  }
-  // player owns 16 pieces
-  p1->getRooks().push_back(std::pair<int,int>(7, 0));
-  p1->getRooks().push_back(std::pair<int,int>(7, 7));
-  p1->getKnights().push_back(std::pair<int,int>(7, 1));
-  p1->getKnights().push_back(std::pair<int,int>(7, 6));
-  p1->getBishops().push_back(std::pair<int,int>(7, 2));
-  p1->getBishops().push_back(std::pair<int,int>(7, 5));
-  p1->getQueen().push_back(std::pair<int,int>(7, 3));
-  p1->getKing().push_back(std::pair<int,int>(7, 4));
-  for (int i = 0; i < len; i++) {
-    p1->getPawns().push_back(std::pair<int,int>(6, i));
-  }
-  p2->getRooks().push_back(std::pair<int,int>(0, 1));
-  p2->getRooks().push_back(std::pair<int,int>(0, 7));
-  p2->getKnights().push_back(std::pair<int,int>(0, 1));
-  p2->getKnights().push_back(std::pair<int,int>(0, 6));
-  p2->getBishops().push_back(std::pair<int,int>(0, 2));
-  p2->getBishops().push_back(std::pair<int,int>(0, 5));
-  p2->getQueen().push_back(std::pair<int,int>(0, 3));
-  p2->getKing().push_back(std::pair<int,int>(0, 4));
-  for (int i = 0; i < len; i++) {
-    p2->getPawns().push_back(std::pair<int,int>(1, i));
-  }
-}
+//get the Piece to be set from command
+pair<bool, char> ChessGame::convertPieceType(string &pType) {
+  bool colour;
+  char type = pType[0];
 
-// add pieces to player when setup
-void ChessGame::add(bool player, std::string type, int row, int col) {
-  std::pair<int, int> k = std::pair<int, int>(row, col);
-  Player *p = player ? p1.get() : p2.get(); //player 1
-
-  if (type == "P" || type == "p") {
-    p->getPawns().push_back(k);
-  } else if (type == "B" || type == "b") {
-    p->getBishops().push_back(k);
-  } else if (type == "N" || type == "n") {
-    p->getKnights().push_back(k);
-  } else if (type == "R" || type == "r") {
-    p->getRooks().push_back(k);
-  } else if (type == "Q" || type == "q") {
-    p->getQueen().push_back(k);
-  } else if (type == "K" || type == "k") {
-    p->getKing().push_back(k);
-  }
-}
-
-void ChessGame::remove(bool player, std::string type, int r, int c) {
-  // remove pieces from player when setup
-  Player *p = player ? p1.get() : p2.get();
-  if (type == "P" || type == "p") {
-    int len = p->getPawns().size();
-    for (int i = 0; i < len; i++) {
-      if (p->getPawns()[i].first == r && p->getPawns()[i].second == c){
-        p->getPawns().erase(p->getPawns().begin() + i);
-      }
-    }
-  } else if (type == "B" || type == "b") {
-    int len = p->getBishops().size();
-    for (int i = 0; i < len; i++) {
-      if (p->getBishops()[i].first == r && p->getBishops()[i].second == c){
-        p->getBishops().erase(p->getBishops().begin() + i);
-      }
-    }
-  } else if (type == "N" || type == "n") {
-    int len = p->getKnights().size();
-    for (int i = 0; i < len; i++) {
-      if (p->getKnights()[i].first == r && p->getKnights()[i].second == c){
-        p->getKnights().erase(p->getKnights().begin() + i);
-      }
-    }
-  } else if (type == "R" || type == "r") {
-    int len = p->getRooks().size();
-    for (int i = 0; i < len; i++) {
-      if (p->getRooks()[i].first == r && p->getRooks()[i].second == c){
-        p->getRooks().erase(p->getRooks().begin() + i);
-      }
-    }
-  } else if (type == "Q" || type == "q") {
-    int len = p->getQueen().size();
-    for (int i = 0; i < len; i++) {
-      if (p->getQueen()[i].first == r && p->getQueen()[i].second == c){
-        p->getQueen().erase(p->getQueen().begin() + i);
-      }
-    }
-  } else if (type == "K" || type == "k") {
-    int len = p->getKing().size();
-    for (int i = 0; i < len; i++) {
-      if (p->getKing()[i].first == r && p->getKing()[i].second == c){
-        p->getKing().erase(p->getKing().begin() + i);
-      }
-    }
-  }
-}
-
-void ChessGame::updatePlayer(bool player, int r, int c, int row, int col, std::string t1, std::string t2) {
-  bool opponent = !player;
-  if (t2 != "") { // the player move with capture, needs to remove previous piece in (row, col)
-    this->remove(player,t1, r, c); // removes my previous location of the piece
-    this->remove(opponent, t2, row, col); // removes opponent's piece at  destination
-    this->add(player, t1, row, col);
+  if (type >= 'a' && type <= 'z') {
+    colour = false;
   } else {
-    if (t1 == "P" || t1 == "p") {
-      int hdist = col - c;
-      if (hdist == 1 ) {
-        if (opponent == true) {
-          this->remove(opponent, "P", r, c + 1);
-        } else {
-          this->remove(opponent, "p", r, c + 1);
+    colour = true;
+  }
+
+  return pair<bool, char>(colour, type);
+}
+
+//setup mode method, for setting up custom board
+void ChessGame::setUpMode() {
+  string cmd;
+
+  try {
+    while (cin >> cmd) {
+
+      if (cmd == "+") {
+
+        string type;
+        string coordinate;
+
+        cin >> type >> coordinate; //possibly do an input check here as well...
+
+        pair<int, int> coord = convertCoord(coordinate);
+        pair<bool, char> p = convertPieceType(type);
+
+        //call a method, but don't know what yet
+        // adding needs to check destination: taken or not
+
+        /*
+        if (theBoard.getBoard()[c.first][c.second].getPiece() != nullptr) {
+          bool player = theBoard.getBoard()[c.first][c.second].getPiece()->colour;
+          string t1 = theBoard.getBoard()[c.first][c.second].getPiece()->type;
+          //this->remove(player, t1, c.first, c.second);
         }
+        theBoard.addPiece(c.first, c.second, t, colour);
+        //this->add(colour, t, c.first, c.second);
+        */
+
+        //game.setUp(cmd, coordinate, t);
+
+        cout << game;
+      } else if (cmd == "-") {
+
+        string coordinate;
+        cin >> coordinate;
+
+        pair<int, int> coord = convertCoord(coordinate);
+
+        //check if there is a piece at destination:
+        // if so do the remove, else (empty) do nothing
+
+        /*
+        //this->remove(colour, t, c.first, c.second);
+        theBoard.removePiece(c.first, c.second);
+        */
+
+        //game.setUp(cmd, coordinate, "");
+
+
+        cout << game;
+      } else if (cmd == "=") { //choose which colour goes first
+        string colour;
+        cin >> colour;
+        if (colour == "white") {
+          turn = true;
+        } else if (colour == "black") {
+          turn = false;
+        } else {
+          cout << "don't come here pls, you typed it wrong..." << endl;
+        }
+      } else if (cmd == "done") {
+
+        //need to check board state:
+        //1. check current king statuses
+          // - either kings in check?
+        //2. pawns not at the top or bottom rows
+        //3. ???? profit
+        //result = theBoard.checkBoard();
+
+        /*
+        if (goodSetup() == false) {
+
+          cout << "Illegal Setup" << endl;
+          cout << "Do some changes" << endl;
+        } else {
+
+          cout << game;
+        }
+        */
+
       } else {
-        if (opponent == true) {
-          this->remove(opponent, "P", r, c - 1);
-        } else {
-          this->remove(opponent, "p", r, c - 1);
+
+        cout << "not a command, try again" << endl;
+      }
+
+    }//end of while
+
+  } catch (ios::failure &) {}
+}
+
+//normal, standard game of chess
+void ChessGame::startGame(string &p1, string &p2) {
+  cin.exceptions(ios::eofbit|ios::failbit);
+
+  //initialize the game board depending on whether board was set or not
+  if (!setBoard) {
+    theBoard.init();
+  }
+
+  //determine what kind of player for (W)
+  if(p1 == "human") {
+    p1 = make_unique<Human>("White", true);
+  } else if (p1 == "computer1") {
+    p1 = make_unique<ComputerL1>("White", true);
+  } else if (p1 == "computer2") {
+    p1 = make_unique<ComputerL2>("White", true);
+  } else if (p1 == "computer3") {
+    p1 = make_unique<ComputerL3>("White", true);
+  } else {
+    //p1 = make_unique<ComputerL4>("White", true);
+  }
+
+  //what kind of player for (B)
+  if(p2 == "human") {
+    p2 = make_unique<Human>("Black", false);
+  } else if (p2 == "computer1") {
+    p2 = make_unique<ComputerL1>("Black", false);
+  } else if (p2 == "computer2") {
+    p2 = make_unique<ComputerL2>("Black", false);
+  } else if (p2 == "computer3") {
+    p2 = make_unique<ComputerL3>("Black", false);
+  } else {
+    //p2 = make_unique<ComputerL4>("Black", false);
+  }
+
+  //input command
+  string cmd;
+
+  try {
+    //standard game loop, get new move until end game conditions
+    while (cin >> cmd) {
+      if (cmd == "move") { //if command for move
+        pair<int, int> temp;
+
+        if (turn) { //white player's turn
+
+          temp = p1->getMove();
+          //do stuff
+
+          turn = false;
+        } else { //black player's turn
+
+          temp = p2->getMove();
+          //do stuff
+
+          turn = true;
         }
+
+        //print board
+        cout << game;
+
+        // staleMate = game.staleMate();
+        // checkMate = checkMate(turn);
+
+        //check for end game conditions
+        /*
+        if (checkMate) { //checkmate
+          if (turn) { //who won just logic for now, might change
+            wScore++;
+            cout << "White Wins!" << endl;
+          } else {
+            bScore++;
+            cout << "Black Wins!" << endl;
+          }
+          break;
+        } else if (staleMate) { //stalemate
+          wScore += 0.5;
+          bScore += 0.5;
+          cout << "Stalemate! +0.5 to both players." << endl;
+          break;
+        }
+        */
+
+      } else if (cmd == "resign") { //if a player resigns
+        if (turn) {
+          bScore++;
+          cout << "White has resigned!" << endl << "Black Wins!" << endl;
+        } else {
+          wScore++;
+          cout << "Black has resigned!" << endl << "White Wins!" << endl;
+        }
+        break;
+      } else {
+        cout << "not a command, try again" << endl;
       }
     }
-    this->remove(player, t1, r, c);
-    this->add(player, t1, row, col);
-  }
+
+    //clear the board? with a clearBoard method?
+    //clearBoard();
+
+  } catch (ios::failure &) {}  // Any I/O failure quit
 }
 
-void ChessGame::setUpOb() {
-  theBoard.setUpOb();
-}
+//play the custom set board, might not need this now?? hmmmm
+//void ChessGame::playSetup() {}
 
-// setup mode
-bool ChessGame::setUp(std::string command, std::string coordinate, std::string t) {
-  std::pair<int, int> c = getLocation(coordinate);
-  bool result = true;
-  bool colour = true;
-  if(t != "") {
-    char type = t[0];
-    if (type >= 'a' && type <= 'z') {
-      colour = false;
-    }
-  }
-  if (command == "+") {
-    if (theBoard.getBoard()[c.first][c.second].getPiece() != nullptr) {
-      bool player = theBoard.getBoard()[c.first][c.second].getPiece()->colour;
-      std::string t1 = theBoard.getBoard()[c.first][c.second].getPiece()->type;
-      this->remove(player, t1, c.first, c.second);
-    }
-    theBoard.addPiece(c.first, c.second, t, colour);
-    this->add(colour, t, c.first, c.second);
-  } else if (command == "-") {
-    this->remove(colour, t, c.first, c.second);
-    theBoard.removePiece(c.first, c.second);
-  } else if (command == "done") {
-    this->setUpOb();
-    result = theBoard.checkBoard();
-  }
-  return result;
-}
+//getters
+double ChessGame::getWScore() { return wScore; }
+double ChessGame::getBScore() { return bScore; }
+bool ChessGame::getTurn() { return turn; }
+bool ChessGame::getSetB() { return setBoard; }
 
+/*
 bool ChessGame::checkMate(bool player) {
   return theBoard.checkMate(player);
 }
+*/
 
-
-//check for if selected coordinates are valid
-// selected correct piece to move?
-// selected valid destination? - your piece @ dest.?
-bool ChessGame::move(bool player, int r, int c, int row, int col) {
-  //what piece is on the coordinates
-  std::string target = "";
-  bool targetC;
-
-  std::string dest = "";
-  bool destC;
-
-  //check if player selected a cell with a piece or not
-  if (theBoard.getBoard()[r][c].getPiece() != nullptr) {
-    //get target's piece information here
-    targetC = theBoard.getBoard()[r][c].getPiece()->colour;
-    target = theBoard.getBoard()[r][c].getPiece()->type;
-
-    //check if selected piece is of the player's colour
-    if ((player && !targetC) || (!player && targetC)) {
-      return false;
-    }
-  } else { //if no piece selected, illegal move, can't move nothing
-    return false;
-  }
-
-  //check for destination if it has a piece on it
-  if (theBoard.getBoard()[row][col].getPiece() != nullptr) {
-    //get destination's piece information here
-    // then use it to replace removed piece
-    destC = theBoard.getBoard()[row][col].getPiece()->colour;
-    dest = theBoard.getBoard()[row][col].getPiece()->type;
-
-    //check if destination piece is of the player's colour
-    if ((player && destC) || (!player && !destC)) {
-      return false;
-    }
-  }
-
-  //boolean result of move command
-  bool result = theBoard.move(player, r, c, row, col, target);
-
-  //check if move is legal and successfully completed, update player
-  // board::move updates the board if the move was successful
-  //if successfully moved piece,
-  // check new board if player is still in check
-  // if in check, redo move and return false,
-  // else continue
-  if (result) {
-    //find own king
-    std::pair<int, int> myKing;
-    if (player) {
-      myKing = p1->getKing()[0];
-    } else {
-      myKing = p2->getKing()[0];
-    }
-    //check king if in check
-    bool selfCheck = theBoard.incheck(player, myKing.first, myKing.second);
-
-    if (selfCheck) {
-      //cant just reverse move cause pawns cant go backwards
-      //reverse the move here somehow
-      //need to move the piece object to a temp if it exists
-      //then move piece back and return piece, problem is with updateOb.
-      //I think need big 5 so we can copy/move any object for this undo part
-
-
-      //result = theBoard.move(player, row, col, r, c, target);
-      /* if (dest != "") {
-        theBoard.addPiece(row, col, dest, destC);
-      } */
-      //result = false;
-    } else {
-
-      //everything works out, no one in check and legal move
-      // need to update players
-      // check if move put opponent in check
-      this->updatePlayer(player, r, c, row, col, target, dest);
-
-      bool opponent = !player;
-
-      //did move put opponent in check
-      bool check = theBoard.check(opponent, row, col, target);
-
-      //if put in check
-      if (check) {
-        //if white put black in check
-        if (player == 1) {
-          std::cout << "Black is in check" << std::endl;
-        } else {
-          //if black put white in check
-          std::cout << "White is in check" << std::endl;
-        }
-      }
-
-      // when opponent moves
-      // change all your pawns passant to false;
-      if (p1->getColour() == opponent) {
-        int len = p1->getPawns().size();
-        for (int i = 0; i < len; i++) {
-          std::pair<int, int> pawn = p1->getPawns()[i];
-          theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
-        }
-      } else {
-        int len = p2->getPawns().size();
-        for (int i = 0; i < len; i++) {
-          std::pair<int, int> pawn = p2->getPawns()[i];
-          theBoard.getBoard()[pawn.first][pawn.second].getPiece()->setPassant(0);
-        }
-      }
-    }
-  }
-  return result;
-}
-
-std::ostream &operator<<(std::ostream &out, const ChessGame &g) {
+ostream &operator<<(ostream &out, const ChessGame &g) {
   out << g.theBoard;
   return out;
 }
