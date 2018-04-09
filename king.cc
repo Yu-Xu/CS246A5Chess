@@ -33,11 +33,11 @@ void King::setFirst(bool first) {
   this->first = first;
 }
 
-void King::notify()
-{
-  std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
-  if(moveFrom == this->getLocation())
-  {
-    std::cout << "It's looking for me King!" << std::endl;
-  }
-}
+// void King::notify()
+// {
+//   std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+//   if(moveFrom == this->getLocation())
+//   {
+//     std::cout << "It's looking for me King!" << std::endl;
+//   }
+// }

@@ -16,6 +16,13 @@ void Subject::detach(Observer *o) {
   }
 }
 
-void Subject::notifyObservers() {
-  for (auto ob : observers) ob->notify();
+bool Subject::notifyObservers() {
+  for (auto ob : observers)
+  	{
+  		if(!ob->notify())
+  		{
+  			return false;
+  		}
+  	}
+  	return true;
 }

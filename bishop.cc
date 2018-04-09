@@ -24,11 +24,11 @@ bool Bishop::legalMove(int destinationRow, int destinationCol) {
   }
 }
 
-void Bishop::notify()
-{
-    std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
-    if(moveFrom == this->getLocation())
-    {
-      std::cout << "It's looking for me! Bishop" << std::endl;
-    }
-}
+// void Bishop::notify()
+// {
+//     std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+//     if(moveFrom == this->getLocation())
+//     {
+//       std::cout << "It's looking for me! Bishop" << std::endl;
+//     }
+// }

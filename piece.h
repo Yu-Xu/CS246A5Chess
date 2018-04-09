@@ -22,6 +22,7 @@ public:
 	std::pair<int,int> getLocation() const;
 	ChessBoard * getSubject() const;
 
+	bool notify() override;
 	virtual bool legalMove(int destinationRow, int destinationCol) = 0;
 };
 

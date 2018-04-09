@@ -1,7 +1,7 @@
 CXX = g++
-CXXFLAGS = -std=c++14 -Wall -Werror=vla -MMD
+CXXFLAGS = -std=c++14 -Wall -MMD
 EXEC = chess
-OBJECTS = main.o cell.o ChessBoard.o ChessGame.o Subject.o piece.o queen.o king.o bishop.o pawn.o knight.o rook.o player.o
+OBJECTS = mainDancho.o observer.o subject.o ChessBoard.o piece.o pawn.o rook.o bishop.o knight.o king.o queen.o emptycell.o
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
@@ -9,6 +9,7 @@ ${EXEC}: ${OBJECTS}
 
 -include ${DEPENDS}
 
+.PHONY: clean
+
 clean:
 	rm ${OBJECTS} ${EXEC} ${DEPENDS}
-.PHONY: clean

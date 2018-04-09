@@ -23,9 +23,9 @@ bool Queen::legalMove(int destinationRow, int destinationCol) {
 	}
 }
 
-void Queen::notify() {
-	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
-	if(moveFrom == this->getLocation()) {
-		std::cout << "It's looking for me Queen!" << std::endl;
-	}
-}
+// void Queen::notify() {
+// 	std::pair<int,int> moveFrom = getSubject()->getMoveFrom();
+// 	if(moveFrom == this->getLocation()) {
+// 		std::cout << "It's looking for me Queen!" << std::endl;
+// 	}
+// }
