@@ -23,7 +23,7 @@ pair<int, int> ChessGame::convertCoord(string &location) {
   r = 8 - (row - '0');
   c = col - 'a';
 
-  return pair<int, int>(r, c);
+  return make_pair(r, c);
 }
 
 //get the Piece to be set from command
@@ -37,7 +37,7 @@ pair<bool, char> ChessGame::convertPieceType(string &pType) {
     colour = true;
   }
 
-  return pair<bool, char>(colour, type);
+  return make_pair(colour, type);
 }
 
 //setup mode method, for setting up custom board
@@ -174,27 +174,30 @@ void ChessGame::startGame(string &p1, string &p2) {
     //standard game loop, get new move until end game conditions
     while (cin >> cmd) {
       if (cmd == "move") { //if command for move
-        pair<int, int> temp;
+        pair<pair<int, int>, pair<int, int>> temp;
 
         if (turn) { //white player's turn
 
           temp = p1->getMove();
           //do stuff
 
-          turn = false;
+          //turn = false;
         } else { //black player's turn
 
           temp = p2->getMove();
           //do stuff
 
-          turn = true;
+          //turn = true;
         }
+
+        theBoard.move(temp);
 
         //print board
         cout << game;
 
         // staleMate = game.staleMate();
         // checkMate = checkMate(turn);
+        // combine the 2 above into 1
 
         //check for end game conditions
         /*
@@ -214,7 +217,7 @@ void ChessGame::startGame(string &p1, string &p2) {
           break;
         }
         */
-
+        turn = !turn;
       } else if (cmd == "resign") { //if a player resigns
         if (turn) {
           bScore++;
@@ -227,28 +230,18 @@ void ChessGame::startGame(string &p1, string &p2) {
       } else {
         cout << "not a command, try again" << endl;
       }
-    }
 
+    }
     //clear the board? with a clearBoard method?
     //clearBoard();
-
   } catch (ios::failure &) {}  // Any I/O failure quit
 }
-
-//play the custom set board, might not need this now?? hmmmm
-//void ChessGame::playSetup() {}
 
 //getters
 double ChessGame::getWScore() { return wScore; }
 double ChessGame::getBScore() { return bScore; }
 bool ChessGame::getTurn() { return turn; }
 bool ChessGame::getSetB() { return setBoard; }
-
-/*
-bool ChessGame::checkMate(bool player) {
-  return theBoard.checkMate(player);
-}
-*/
 
 ostream &operator<<(ostream &out, const ChessGame &g) {
   out << g.theBoard;

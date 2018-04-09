@@ -18,6 +18,8 @@ int main(int argc, char *argv[]) {
 				//if setup, then u just do game and play with setup board
 				//game.playSetup();
 
+        //do stuff if u chose setup
+
         cout << game;
       } else if (cmd == "game") { //play game, whether setup board or not
 				string p1;
@@ -28,6 +30,10 @@ int main(int argc, char *argv[]) {
 						(p2 == "human" || p2 == "computer1" || p2 == "computer2" ||
 						p2 == "computer3" || p2 == "computer4")) {
 							game.startGame(p1, p2);
+
+              //do stuff with testing
+
+
 					} else {
 						cout << "Hey! You are not inputting correctly..." << endl;
 						cout << "Options:" << endl;
