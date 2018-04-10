@@ -1,7 +1,7 @@
 #include "king.h"
 #include <iostream>
 
-King::King(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col):
+King::King(ChessBoard* subject, bool colour, int row, int col):
   Piece{subject, colour, row, col, 0}, first{1} {
     getSubject()->attach(this);
   }

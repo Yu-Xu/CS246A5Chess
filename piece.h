@@ -5,18 +5,17 @@
 #include "observer.h"
 #include "ChessBoard.h"
 
-class Piece: public Observer
-{
-	std::shared_ptr<ChessBoard> subject;
+class Piece: public Observer {
+	ChessBoard* subject;
 	bool colour; //black or white
 	std::pair<int, int> location;
 	bool empty;
-	
+
 public:
 	Piece();
-	Piece(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col, bool empty);
+	Piece(ChessBoard* subject, bool colour, int row, int col, bool empty);
 	~Piece();
-	
+
 	bool isEmpty() const;
 	bool getColour() const;
 	std::pair<int,int> getLocation() const;

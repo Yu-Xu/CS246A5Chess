@@ -1,7 +1,7 @@
 #include "rook.h"
 #include <iostream>
 
-Rook::Rook(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1} {
+Rook::Rook(ChessBoard* subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1} {
 	getSubject()->attach(this);
 }
 

@@ -8,7 +8,7 @@ class Pawn: public Piece {
   bool passant;
 
  public:
-  Pawn(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
+  Pawn(ChessBoard* subject, bool colour, int row, int col);
   ~Pawn();
 
   //void notify() override;

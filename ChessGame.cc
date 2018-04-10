@@ -7,9 +7,10 @@
 using namespace std;
 
 ChessGame::ChessGame():
-  theBoard{ChessBoard{}},
+  theBoard{make_unique<ChessBoard>()},
   p1{make_unique<Player>()},
   p2{make_unique<Player>()},
+  moveList{},
   wScore{0}, bScore{0}, turn{true}, setBoard{false} {}
 
 ChessGame::~ChessGame() {}

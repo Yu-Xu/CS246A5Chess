@@ -7,7 +7,7 @@ class Rook: public Piece {
   bool first;
 
  public:
-  Rook(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
+  Rook(ChessBoard* subject, bool colour, int row, int col);
   ~Rook();
 
   //void notify() override;

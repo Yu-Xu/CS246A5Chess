@@ -7,7 +7,7 @@ class Knight: public Piece {
   //bool check;
 
  public:
-  Knight(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
+  Knight(ChessBoard* subject, bool colour, int row, int col);
   ~Knight();
 
   //void notify() override;

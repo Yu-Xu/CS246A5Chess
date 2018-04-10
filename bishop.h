@@ -7,7 +7,7 @@ class Bishop: public Piece {
   //bool check;
 
  public:
-  Bishop(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col);
+  Bishop(ChessBoard* subject, bool colour, int row, int col);
   ~Bishop();
 
   //void notify() override;

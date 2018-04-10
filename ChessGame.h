@@ -12,10 +12,13 @@
 //class that represents a single session of a game
 class ChessGame {
   //a game requires a board and 2 Players
-  ChessBoard theBoard;
+  std::unique_ptr<ChessBoard> theBoard;
   //the players own the pieces
   std::unique_ptr<Player> p1;
   std::unique_ptr<Player> p2;
+
+  //to keep track of every move as a board state
+  std::vector<std::unique_ptr<ChessBoard>> moveList;
 
   //count score
   double wScore, bScore;

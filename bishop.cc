@@ -1,7 +1,7 @@
 #include "bishop.h"
 #include <iostream>
 
-Bishop::Bishop(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
+Bishop::Bishop(ChessBoard* subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
   getSubject()->attach(this);
 }
 

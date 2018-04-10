@@ -1,7 +1,7 @@
 #include "pawn.h"
 #include <iostream>
 
-Pawn::Pawn(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1}, passant{0} {
+Pawn::Pawn(ChessBoard* subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0}, first{1}, passant{0} {
 	getSubject()->attach(this);
 }
 

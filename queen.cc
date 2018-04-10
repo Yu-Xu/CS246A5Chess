@@ -1,7 +1,7 @@
 #include "queen.h"
 #include <iostream>
 
-Queen::Queen(std::shared_ptr<ChessBoard> subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
+Queen::Queen(ChessBoard* subject, bool colour, int row, int col): Piece{subject, colour, row, col, 0} {
 	getSubject()->attach(this);
 }
 
